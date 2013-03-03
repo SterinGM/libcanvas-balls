@@ -4,6 +4,9 @@ atom.declare('Balls.Ball', App.Element, {
 
         this.stable  = false;
 
+        this.from     = this.settings.get('from');
+        this.position = this.settings.get('position');
+
 //		new App.Clickable( this, this.redraw ).start();
     },
 
@@ -11,19 +14,11 @@ atom.declare('Balls.Ball', App.Element, {
         return this.settings.get('controller');
     },
 
-    get position () {
-        return this.settings.get('position');
-    },
-
-    get from () {
-        return this.settings.get('from');
-    },
-
     get color () {
         return this.settings.get('color');
     },
 
-    fall: function (point) {
+    fall: function (point, fn, time) {
         var props = {}, current = this.shape.from;
 
         var next = new Point(this.position.x, point ? this.position.y : this.from.y + 1);
@@ -39,8 +34,8 @@ atom.declare('Balls.Ball', App.Element, {
         }
 
         this.animate({
-            time : point ? 1000 : 50,
-            fn   : point ? 'cubic-in' : 'linear',
+            time : time ? time : (point ? 1000 : 50),
+            fn   : fn ? fn : (point ? 'cubic-in' : 'linear'),
             props: props,
             onTick: this.redraw,
             onComplete: function () {

@@ -147,6 +147,37 @@ atom.declare('Balls.Controller', {
     },
 
     dropBalls: function() {
+        var size = this.settings.get('size');
+        var y, empty, key, ball, delta;
+
+        this.selection.forEach(function(arr, x) {
+            key = 0;
+            empty = [];
+
+            for (y = size.y - 1; y >= 0; y--) {
+                ball = this.balls[y][x];
+
+                if (!ball) {
+                    empty.push(y);
+                } else {
+                    if (empty.length) {
+                        ball.stable   = false;
+                        ball.from     = ball.position;
+                        ball.position = new Point(x, empty[key]);
+
+                        delta = ball.position.y - ball.from.y;
+
+                        ball.fall(ball.position, 'linear', delta * 100);
+
+                        this.balls[y][x] = null;
+                        this.balls[empty[key]][x] = ball;
+
+                        empty.push(y);
+                        key++;
+                    }
+                }
+            }
+        }.bind(this));
     },
 
     click: function(ball) {
