@@ -152,11 +152,9 @@ atom.declare('Balls.Controller', {
 
         this.check(ball, ball.color);
 
-        if (this.count > 1) {
-            for (var i in this.selection) {
-                this.selection[i].hide();
-            };
-        }
+        for (var i in this.selection) {
+            this.selection[i].hide(this.count);
+        };
     },
 
     check: function(ball, color) {

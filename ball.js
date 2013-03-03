@@ -88,7 +88,7 @@ atom.declare('Balls.Ball', App.Element, {
         });
     },
 
-    hide: function () {
+    hide: function(count) {
         var scale = Math.ceil(this.shape.width / 15);
 
         this.animate({
@@ -102,7 +102,9 @@ atom.declare('Balls.Ball', App.Element, {
                 'shape.to.y'   : this.shape.to.y + scale
             },
             onComplete: function () {
-                scale = Math.ceil(this.shape.width / 2);
+                if (count > 1) {
+                    scale = Math.ceil(this.shape.width / 2);
+                }
 
                 this.animate({
                     fn: 'sine-in',
@@ -115,9 +117,9 @@ atom.declare('Balls.Ball', App.Element, {
                         'shape.to.y'   : this.shape.to.y - scale
                     },
                     onComplete: function () {
-//                        atom.trace(this.position);
-
-                        this.controller.balls[this.position.y][this.position.x] = null;
+                        if (count > 1) {
+                            this.controller.balls[this.position.y][this.position.x] = null;
+                        }
                     }.bind(this)
                 });
             }.bind(this)
