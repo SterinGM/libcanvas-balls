@@ -146,23 +146,33 @@ atom.declare('Balls.Controller', {
         return new Point(position.x * (tile.width + tile.margin) + tile.margin, position.y * (tile.height + tile.margin) + tile.margin);
     },
 
+    dropBalls: function() {
+    },
+
     click: function(ball) {
-        this.count = 0;
-        this.selection = {};
+        this.count     = 0;
+        this.hidden    = 0;
+        this.selection = [];
 
         this.check(ball, ball.color);
 
-        for (var i in this.selection) {
-            this.selection[i].hide(this.count);
-        };
+        this.selection.forEach(function(arr) {
+            arr.forEach(function(ball) {
+                ball.hide(this.count);
+            }.bind(this));
+        }.bind(this));
     },
 
     check: function(ball, color) {
-        if (typeof(this.selection[ball.position.x + '|' + ball.position.y]) === 'undefined') {
+        if (typeof(this.selection[ball.position.x]) === 'undefined' || typeof(this.selection[ball.position.x][ball.position.y]) === 'undefined') {
             if (ball.color === color) {
+                if (typeof(this.selection[ball.position.x]) === 'undefined') {
+                    this.selection[ball.position.x] = [];
+                }
+
                 this.count++;
 
-                this.selection[ball.position.x + '|' + ball.position.y] = ball;
+                this.selection[ball.position.x][ball.position.y] = ball;
 
                 var neighbours = this.getNeighbours(ball.position);
 

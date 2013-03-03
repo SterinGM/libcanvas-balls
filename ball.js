@@ -108,7 +108,7 @@ atom.declare('Balls.Ball', App.Element, {
 
                 this.animate({
                     fn: 'sine-in',
-                    time  : 200,
+                    time  : count > 1 ? 200 : 50,
                     onTick: this.redraw,
                     props: {
                         'shape.from.x' : this.shape.from.x + scale,
@@ -119,6 +119,13 @@ atom.declare('Balls.Ball', App.Element, {
                     onComplete: function () {
                         if (count > 1) {
                             this.controller.balls[this.position.y][this.position.x] = null;
+                            this.controller.hidden++;
+
+                            if (this.controller.hidden === count) {
+                                this.controller.dropBalls();
+
+//                                atom.trace('DOne');
+                            }
                         }
                     }.bind(this)
                 });
