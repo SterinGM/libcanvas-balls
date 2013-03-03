@@ -2,6 +2,8 @@ atom.declare('Balls.Controller', {
     initialize: function(settings) {
         this.settings = new atom.Settings(settings);
 
+        this.bindMethods(['isValidPoint']);
+
         atom.ImagePreloader.run({
             white:   'balls.png [15:15:120:120]',
             red:     'balls.png [15:165:120:120]',
@@ -72,10 +74,10 @@ atom.declare('Balls.Controller', {
         var size = this.settings.get('size');
 
         var
-            i, y, x, position,
+            y, x, position,
             balls = {};
 
-        this.balls = atom.array.fillMatrix(size.x, size.y, 0);
+        this.balls = atom.array.fillMatrix(size.x, size.y, null);
 
         for (y = size.y - 1; y >= 0; y--) {
             for (x = 0; x < size.x; x++) {
@@ -108,13 +110,15 @@ atom.declare('Balls.Controller', {
         var size = this.settings.get('size');
         var colors = ['white', 'red', 'green', 'blue', 'yellow', 'orange', 'magenta'];
 
+        var color = colors.popRandom();
         var pos = new Point(position.x, position.y - size.y - 1);
 
         var ball = new Balls.Ball(layer, {
             from:       pos,
             position:   position,
             shape:      this.tileShape(pos),
-            image:      this.images.get(colors.popRandom()),
+            image:      this.images.get(color),
+            color:      color,
             controller: this
         });
 
@@ -123,7 +127,7 @@ atom.declare('Balls.Controller', {
         ball.events.add('mousedown', function (e) {
             e.preventDefault();
 
-            ball.click();
+            this.click(ball);
         }.bind(this));
 
         return ball;
@@ -140,5 +144,56 @@ atom.declare('Balls.Controller', {
         var tile = this.settings.get('tile');
 
         return new Point(position.x * (tile.width + tile.margin) + tile.margin, position.y * (tile.height + tile.margin) + tile.margin);
+    },
+
+    click: function(ball) {
+        this.count = 0;
+        this.selection = {};
+
+        this.check(ball, ball.color);
+
+        if (this.count > 1) {
+            for (var i in this.selection) {
+                this.selection[i].hide();
+            };
+        }
+    },
+
+    check: function(ball, color) {
+        if (typeof(this.selection[ball.position.x + '|' + ball.position.y]) === 'undefined') {
+            if (ball.color === color) {
+                this.count++;
+
+                this.selection[ball.position.x + '|' + ball.position.y] = ball;
+
+                var neighbours = this.getNeighbours(ball.position);
+
+                neighbours.forEach(function(point) {
+                    if (this.balls[point.y][point.x]) {
+                        this.check(this.balls[point.y][point.x], color);
+                    }
+                }.bind(this));
+            }
+        }
+    },
+
+    isValidPoint: function(point) {
+        var size = this.settings.get('size');
+
+        return point.x >= 0
+            && point.y >= 0
+            && point.x < size.x
+            && point.y < size.y;
+    },
+
+    getNeighbours: function(point) {
+        var neighbours = new Array(
+            point.getNeighbour('t'),
+            point.getNeighbour('r'),
+            point.getNeighbour('b'),
+            point.getNeighbour('l')
+        );
+
+        return neighbours.filter(this.isValidPoint);
     }
 });

@@ -19,6 +19,10 @@ atom.declare('Balls.Ball', App.Element, {
         return this.settings.get('from');
     },
 
+    get color () {
+        return this.settings.get('color');
+    },
+
     fall: function (point) {
         var props = {}, current = this.shape.from;
 
@@ -84,19 +88,19 @@ atom.declare('Balls.Ball', App.Element, {
         });
     },
 
-    click: function () {
+    hide: function () {
         var scale = Math.ceil(this.shape.width / 15);
 
         this.animate({
             time: 50,
             fn : 'sine-out',
+            onTick: this.redraw,
             props: {
                 'shape.from.x' : this.shape.from.x - scale,
                 'shape.from.y' : this.shape.from.y - scale,
                 'shape.to.x'   : this.shape.to.x + scale,
                 'shape.to.y'   : this.shape.to.y + scale
             },
-            onTick: this.redraw,
             onComplete: function () {
                 scale = Math.ceil(this.shape.width / 2);
 
@@ -109,7 +113,12 @@ atom.declare('Balls.Ball', App.Element, {
                         'shape.from.y' : this.shape.from.y + scale,
                         'shape.to.x'   : this.shape.to.x - scale,
                         'shape.to.y'   : this.shape.to.y - scale
-                    }
+                    },
+                    onComplete: function () {
+//                        atom.trace(this.position);
+
+                        this.controller.balls[this.position.y][this.position.x] = null;
+                    }.bind(this)
                 });
             }.bind(this)
         });
