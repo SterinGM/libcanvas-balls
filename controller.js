@@ -145,6 +145,33 @@ atom.declare('Balls.Controller', {
         return new Point(position.x * (tile.width + tile.margin) + tile.margin, position.y * (tile.height + tile.margin) + tile.margin);
     },
 
+    isFinish: function() {
+        var x, y, ball;
+        var size = this.settings.get('size');
+
+        for (y = 0; y < size.y - 1; y++) {
+            for (x = 0; x < size.x - 1; x++) {
+                ball = this.balls[y][x];
+
+                if (ball) {
+                    if (this.balls[y + 1][x] && ball.color === this.balls[y + 1][x].color) {
+                        return false;
+                    }
+
+                    if (this.balls[y][x + 1] && ball.color === this.balls[y][x + 1].color) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    },
+
+    gameOver: function() {
+        alert('GAME OVER!!!');
+    },
+
     dropBalls: function() {
         var size = this.settings.get('size');
         var y, empty, key, ball, delta;
@@ -185,6 +212,10 @@ atom.declare('Balls.Controller', {
                 this.balls[y][x].fall(null, null, null, delta + 1);
             }
         }.bind(this));
+
+        if (this.isFinish()) {
+            this.gameOver();
+        }
     },
 
     click: function(ball) {
