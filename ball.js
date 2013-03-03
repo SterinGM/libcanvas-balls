@@ -18,7 +18,7 @@ atom.declare('Balls.Ball', App.Element, {
         return this.settings.get('color');
     },
 
-    fall: function (point, fn, time) {
+    fall: function (point, fn, time, delta) {
         var props = {}, current = this.shape.from;
 
         var next = new Point(this.position.x, point ? this.position.y : this.from.y + 1);
@@ -34,7 +34,7 @@ atom.declare('Balls.Ball', App.Element, {
         }
 
         this.animate({
-            time : time ? time : (point ? 1000 : 50),
+            time : time ? time : (point ? (delta ? delta : 10) * 100 : 50),
             fn   : fn ? fn : (point ? 'cubic-in' : 'linear'),
             props: props,
             onTick: this.redraw,
@@ -44,14 +44,14 @@ atom.declare('Balls.Ball', App.Element, {
                 this.stable = true;
 
                 if (next.y !== this.position.y) {
-                    this.fall(next);
+                    this.fall(next, fn, time, delta);
 
                     if (this.position.y > 0)
                     {
                         var ball = this.controller.balls[this.position.y - 1][this.position.x];
 
                         if (ball && !ball.stable) {
-                            ball.fall();
+                            ball.fall(null, fn, time, delta);
                         }
                     }
                 } else {

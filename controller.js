@@ -83,7 +83,7 @@ atom.declare('Balls.Controller', {
             for (x = 0; x < size.x; x++) {
                 var position = new Point(x, y);
 
-                this.balls[y][x] = this.createBall(this.layer, position);
+                this.balls[y][x] = this.createBall(this.layer, position, size.y + 1);
             }
         }
 
@@ -98,7 +98,7 @@ atom.declare('Balls.Controller', {
         for (x = 0; x < size.x; x++) {
             for (y = size.y - 1; y >= 0; y--) {
                 if (this.balls[y][x] && !this.balls[y][x].stable) {
-                    this.balls[y][x].fall();
+                    this.balls[y][x].fall(null, null, null, size.y);
 
                     break;
                 }
@@ -106,12 +106,11 @@ atom.declare('Balls.Controller', {
         }
     },
 
-    createBall: function(layer, position) {
-        var size = this.settings.get('size');
+    createBall: function(layer, position, delta) {
         var colors = ['white', 'red', 'green', 'blue', 'yellow', 'orange', 'magenta'];
 
         var color = colors.popRandom();
-        var pos = new Point(position.x, position.y - size.y - 1);
+        var pos = new Point(position.x, position.y - delta);
 
         var ball = new Balls.Ball(layer, {
             from:       pos,
@@ -176,6 +175,14 @@ atom.declare('Balls.Controller', {
                         key++;
                     }
                 }
+            }
+
+            delta = empty.length - key;
+
+            for (y = delta - 1; y >= 0; y--) {
+                this.balls[y][x] = this.createBall(this.layer, new Point(x, y), delta + 1);
+
+                this.balls[y][x].fall(null, null, null, delta + 1);
             }
         }.bind(this));
     },
