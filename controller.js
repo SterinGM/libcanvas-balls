@@ -18,15 +18,17 @@ atom.declare('Balls.Controller', {
 
         this.images = images;
 
-//        this.sounds = new Balls.Sounds('/mp3/');
-
         app = new App({
             size: this.size()
         });
 
         this.createField(app);
 
-        this.layer = app.createLayer({intersection: 'manual', name: 'balls', zIndex: 1});
+        mouse = new Mouse(app.container.bounds);
+
+        this.mouseHandler = new App.MouseHandler({mouse: mouse, app: app});
+
+        this.layer = app.createLayer({name: 'balls', zIndex: 1});
 
         this.generate();
     },
@@ -79,7 +81,7 @@ atom.declare('Balls.Controller', {
             for (x = 0; x < size.x; x++) {
                 var position = new Point(x, y);
 
-                this.balls[y][x] = this.createTile(this.layer, position);
+                this.balls[y][x] = this.createBall(this.layer, position);
             }
         }
 
@@ -102,13 +104,13 @@ atom.declare('Balls.Controller', {
         }
     },
 
-    createTile: function(layer, position) {
+    createBall: function(layer, position) {
         var size = this.settings.get('size');
         var colors = ['white', 'red', 'green', 'blue', 'yellow', 'orange', 'magenta'];
 
         var pos = new Point(position.x, position.y - size.y - 1);
 
-        var tile = new Balls.Ball(layer, {
+        var ball = new Balls.Ball(layer, {
             from:       pos,
             position:   position,
             shape:      this.tileShape(pos),
@@ -116,14 +118,15 @@ atom.declare('Balls.Controller', {
             controller: this
         });
 
-//		this.mouseHandler.subscribe(tile);
-//
-//		tile.events.add( 'mousedown', function (e) {
-//			e.preventDefault();
-//			this.move( tile );
-//		}.bind(this));
+        this.mouseHandler.subscribe(ball);
 
-        return tile;
+        ball.events.add('mousedown', function (e) {
+            e.preventDefault();
+
+            ball.click();
+        }.bind(this));
+
+        return ball;
     },
 
     tileShape: function(position) {

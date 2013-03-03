@@ -82,5 +82,36 @@ atom.declare('Balls.Ball', App.Element, {
             draw :    this.shape,
             optimize: true
         });
+    },
+
+    click: function () {
+        var scale = Math.ceil(this.shape.width / 15);
+
+        this.animate({
+            time: 50,
+            fn : 'sine-out',
+            props: {
+                'shape.from.x' : this.shape.from.x - scale,
+                'shape.from.y' : this.shape.from.y - scale,
+                'shape.to.x'   : this.shape.to.x + scale,
+                'shape.to.y'   : this.shape.to.y + scale
+            },
+            onTick: this.redraw,
+            onComplete: function () {
+                scale = Math.ceil(this.shape.width / 2);
+
+                this.animate({
+                    fn: 'sine-in',
+                    time  : 200,
+                    onTick: this.redraw,
+                    props: {
+                        'shape.from.x' : this.shape.from.x + scale,
+                        'shape.from.y' : this.shape.from.y + scale,
+                        'shape.to.x'   : this.shape.to.x - scale,
+                        'shape.to.y'   : this.shape.to.y - scale
+                    }
+                });
+            }.bind(this)
+        });
     }
 });
