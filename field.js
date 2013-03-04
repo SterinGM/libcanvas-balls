@@ -1,22 +1,31 @@
-atom.declare('Balls.Field', App.Element, {
-    renderSprite: function(odd) {
-        var
-            buffer = LibCanvas.buffer(this.shape.size, true);
+atom.declare('Field', Tile, {
+	initialize: function(app, settings) {
+		this.settings = new atom.Settings(settings);
 
-        var alpha = odd ? 0.6 : 0.4;
+        this.create(app);
+	},
 
-        buffer.ctx
-            .set({ globalAlpha: alpha })
-            .fillAll('grey');
+    create: function(app) {
+		var layer = app.createLayer({name: 'field', zIndex: 0});
 
-        return buffer;
-    },
+        var size = this.settings.get('size');
 
-    renderTo: function (ctx) {
-        ctx.drawImage({
-            image:    this.renderSprite(this.settings.get('odd')),
-            draw :    this.shape,
-            optimize: true
-        });
+        var y, x, position, odd;
+
+        for (y = 0; y < size.y; y++) {
+            odd = y % 2 ;
+
+            for (x = 0; x < size.x; x++) {
+                position = new Point(x, y);
+
+                odd = !odd;
+
+                new Field.Tile(layer, {
+                    position: position,
+                    shape:    this.tileShape(position),
+                    odd:      odd
+                });
+            }
+        }
     }
 });

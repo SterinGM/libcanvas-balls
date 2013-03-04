@@ -24,7 +24,7 @@ atom.declare('Balls.Controller', {
             size: this.size()
         });
 
-        this.createField(app);
+        new Field(app, this.settings);
 
         mouse = new Mouse(app.container.bounds);
 
@@ -33,31 +33,6 @@ atom.declare('Balls.Controller', {
         this.layer = app.createLayer({name: 'balls', zIndex: 1});
 
         this.generate();
-    },
-
-    createField: function(app) {
-        var layerFiels = app.createLayer({name: 'field', zIndex: 0});
-
-        var size = this.settings.get('size');
-
-        var
-            y, x, position, odd;
-
-        for (y = 0; y < size.y; y++) {
-            odd = y % 2 ;
-
-            for (x = 0; x < size.x; x++) {
-                position = new Point(x, y);
-
-                odd = !odd;
-
-                new Balls.Field(layerFiels, {
-                    position: position,
-                    shape:    this.tileShape(position),
-                    odd:      odd
-                });
-            }
-        }
     },
 
     size: function() {
