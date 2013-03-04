@@ -74,7 +74,7 @@ atom.declare('Balls.Controller', {
 
         for (x = 0; x < size.x; x++) {
             if (this.balls[y][x] && !this.balls[y][x].animated) {
-                this.balls[y][x].fall(null, null, null, size.y);
+                this.balls[y][x].fall('cubic-in', size.y);
             }
         }
     },
@@ -174,7 +174,7 @@ atom.declare('Balls.Controller', {
 
                         delta = ball.position.y - ball.from.y;
 
-                        ball.fall(ball.position, 'linear', delta * 100);
+                        ball.fall(null, delta);
 
                         this.balls[y][x] = null;
                         this.balls[empty[key]][x] = ball;
@@ -189,9 +189,9 @@ atom.declare('Balls.Controller', {
 
             for (y = delta - 1; y >= 0; y--) {
                 this.balls[y][x] = this.createBall(this.layer, new Point(x, y), delta + 1);
-
-                this.balls[y][x].fall(null, null, null, delta + 1);
             }
+
+            this.balls[delta - 1][x].fall('cubic-in', delta + 1);
         }.bind(this));
 
         if (this.isFinish()) {

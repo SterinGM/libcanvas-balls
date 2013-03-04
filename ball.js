@@ -18,14 +18,12 @@ atom.declare('Balls.Ball', App.Element, {
         return this.settings.get('color');
     },
 
-    fall: function (point, fn, time, delta) {
+    fall: function (fn, delta) {
         this.animated = true;
 
         var props = {}, current = this.shape.from;
 
-        var next = new Point(this.position.x, point ? this.position.y : this.from.y + 1);
-
-        var destination = this.controller.translatePoint(next);
+        var destination = this.controller.translatePoint(this.position);
 
         if (!destination.x.equals(current.x, 1)) {
             props.x = destination.x;
@@ -36,31 +34,32 @@ atom.declare('Balls.Ball', App.Element, {
         }
 
         this.animate({
-            time : time ? time : (point ? (delta ? delta : 10) * 100 : 50),
-            fn   : fn ? fn : (point ? 'cubic-in' : 'linear'),
+            time : (delta ? delta : 10) * 100,
+            fn   : fn ? fn : 'linear',
             props: props,
-            onTick: this.redraw,
-            onComplete: function () {
+            onTick: function(animation) {
                 this.redraw();
 
-                this.stable = true;
+                if (this.position.y > 0) {
+                    var deltaTime = animation.animatable.current.allTime - animation.animatable.current.timeLeft;
 
-                if (next.y !== this.position.y) {
-                    this.fall(next, fn, time, delta);
-
-                    if (this.position.y > 0)
+                    if (deltaTime >= 50 || animation.animatable.current.timeLeft === 0)
                     {
                         var ball = this.controller.balls[this.position.y - 1][this.position.x];
 
-                        if (ball && !ball.animated) {
-                            ball.fall(null, fn, time, delta);
+                        if (ball && !ball.animated && !this.from.equals(this.position, 1)) {
+
+                            ball.fall(fn, delta);
                         }
                     }
-                } else {
-                    this.animated = false;
-
-//                    this.controller.sounds.play('fall');
                 }
+            }.bind(this),
+            onComplete: function () {
+                this.redraw();
+
+                this.from = this.position;
+
+                this.animated = false;
             }.bind(this)
         });
 
