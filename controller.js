@@ -5,12 +5,12 @@ atom.declare('Balls.Controller', {
         this.bindMethods(['isValidPoint']);
 
         atom.ImagePreloader.run({
-            white:   'balls.png [15:15:120:120]',
+//            white:   'balls.png [15:15:120:120]',
             red:     'balls.png [15:165:120:120]',
             yellow:  'balls.png [15:315:120:120]',
-            orange:  'balls.png [15:473:120:120]',
+//            orange:  'balls.png [15:473:120:120]',
             blue:    'balls.png [15:615:120:120]',
-            magenta: 'balls.png [15:765:120:120]',
+//            magenta: 'balls.png [15:765:120:120]',
             green:   'balls.png [15:915:120:120]'
         }, this.start.bind(this));
     },
@@ -80,7 +80,15 @@ atom.declare('Balls.Controller', {
     },
 
     createBall: function(layer, position, delta) {
-        var colors = ['white', 'red', 'green', 'blue', 'yellow', 'orange', 'magenta'];
+        var colors = [
+//            'white',
+            'red',
+            'green',
+            'blue',
+            'yellow',
+//            'orange',
+//            'magenta'
+        ];
 
         var color = colors.popRandom();
         var pos = new Point(position.x, position.y - delta);
