@@ -2,7 +2,7 @@ atom.declare('Balls.Ball', App.Element, {
     configure: function () {
         this.animate = new atom.Animatable(this).animate;
 
-        this.stable  = false;
+        this.animated = false;
 
         this.from     = this.settings.get('from');
         this.position = this.settings.get('position');
@@ -19,6 +19,8 @@ atom.declare('Balls.Ball', App.Element, {
     },
 
     fall: function (point, fn, time, delta) {
+        this.animated = true;
+
         var props = {}, current = this.shape.from;
 
         var next = new Point(this.position.x, point ? this.position.y : this.from.y + 1);
@@ -50,11 +52,13 @@ atom.declare('Balls.Ball', App.Element, {
                     {
                         var ball = this.controller.balls[this.position.y - 1][this.position.x];
 
-                        if (ball && !ball.stable) {
+                        if (ball && !ball.animated) {
                             ball.fall(null, fn, time, delta);
                         }
                     }
                 } else {
+                    this.animated = false;
+
 //                    this.controller.sounds.play('fall');
                 }
             }.bind(this)

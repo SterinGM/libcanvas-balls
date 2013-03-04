@@ -93,15 +93,13 @@ atom.declare('Balls.Controller', {
     },
 
     fallBalls: function() {
+        var x;
         var size = this.settings.get('size');
+        var y = size.y - 1;
 
         for (x = 0; x < size.x; x++) {
-            for (y = size.y - 1; y >= 0; y--) {
-                if (this.balls[y][x] && !this.balls[y][x].stable) {
-                    this.balls[y][x].fall(null, null, null, size.y);
-
-                    break;
-                }
+            if (this.balls[y][x] && !this.balls[y][x].animated) {
+                this.balls[y][x].fall(null, null, null, size.y);
             }
         }
     },
@@ -187,7 +185,7 @@ atom.declare('Balls.Controller', {
                     empty.push(y);
                 } else {
                     if (empty.length) {
-                        ball.stable   = false;
+                        ball.animated = true;
                         ball.from     = ball.position;
                         ball.position = new Point(x, empty[key]);
 
