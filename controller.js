@@ -201,22 +201,27 @@ atom.declare('Balls.Controller', {
     },
 
     click: function(ball) {
+        this.moved     = false;
         this.count     = 0;
         this.hidden    = 0;
         this.selection = [];
 
         this.check(ball, ball.color);
 
-        this.selection.forEach(function(arr) {
-            arr.forEach(function(ball) {
-                ball.hide(this.count);
+        if (!this.moved) {
+            this.selection.forEach(function(arr) {
+                arr.forEach(function(ball) {
+                    ball.hide(this.count);
+                }.bind(this));
             }.bind(this));
-        }.bind(this));
+        }
     },
 
     check: function(ball, color) {
         if (typeof(this.selection[ball.position.x]) === 'undefined' || typeof(this.selection[ball.position.x][ball.position.y]) === 'undefined') {
             if (ball.color === color) {
+                this.moved = this.moved || ball.animated;
+
                 if (typeof(this.selection[ball.position.x]) === 'undefined') {
                     this.selection[ball.position.x] = [];
                 }
