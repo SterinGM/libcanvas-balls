@@ -77,8 +77,13 @@ atom.declare('Balls.Ball', App.Element, {
         return this;
     },
 
-    get x() { return this.shape.from.x },
-    get y() { return this.shape.from.y },
+    get x() {
+        return this.shape.from.x;
+    },
+
+    get y() {
+        return this.shape.from.y;
+    },
 
     set x(value) {
         return this.shape.move(new Point( value - this.x, 0 ));
