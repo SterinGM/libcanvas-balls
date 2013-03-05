@@ -35,13 +35,15 @@ atom.declare('Balls.Ball', App.Element, {
     },
 
     fall: function() {
-        this.animated = true;
-
         var props = {}, current = this.shape.from;
 
         var delta = this.position.y - this.from.y;
 
         var destination = this.controller.translatePoint(this.position);
+
+        var acceleration = 10;
+        var length       = destination.y - current.y;
+        var time         = Math.sqrt(2 * length / acceleration);
 
         if (!destination.x.equals(current.x, 1)) {
             props.x = destination.x;
@@ -51,9 +53,13 @@ atom.declare('Balls.Ball', App.Element, {
             props.y = destination.y;
         }
 
+        this.animated = true;
+
         this.animate({
-            time : delta * 100,
-            fn   : 'cubic-in',
+            time : Math.round(time * 100),
+            fn   : function(p) {
+                return Math.pow(p, 2);
+            },
             props: props,
             onTick: function(animation) {
                 this.redraw();
