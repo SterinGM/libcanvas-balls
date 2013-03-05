@@ -35,6 +35,10 @@ atom.declare('Balls.Ball', App.Element, {
     },
 
     fall: function() {
+        if (this.animated) {
+            return;
+        }
+
         var props = {}, current = this.shape.from;
 
         var destination = this.controller.translatePoint(this.position);
@@ -99,6 +103,10 @@ atom.declare('Balls.Ball', App.Element, {
     renderTo: function(ctx) {
         var image = this.settings.values.image;
 
+        if (this.hover && !this.animated) {
+//            this.hide(0);
+        }
+
         ctx.drawImage({
             image:    image,
             draw :    this.shape,
@@ -123,6 +131,10 @@ atom.declare('Balls.Ball', App.Element, {
 	},
 
     hide: function(count) {
+        if (this.animated) {
+            return;
+        }
+
         var scale = Math.ceil(this.shape.width / 15);
 
         this.animated = true;
