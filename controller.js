@@ -58,7 +58,7 @@ atom.declare('Balls.Controller', {
             for (y = size.y - 1; y >= 0; y--) {
                 var position = new Point(x, y);
 
-                ball = this.createBall(this.layer, position, size.y + 1);
+                ball = this.createBall(this.layer, position, size.y);
 
                 if (first === null) {
                     first = ball;
@@ -181,7 +181,7 @@ atom.declare('Balls.Controller', {
             delta = empty.length - key;
 
             for (y = delta - 1; y >= 0; y--) {
-                ball = this.createBall(this.layer, new Point(x, y), delta + 1);
+                ball = this.createBall(this.layer, new Point(x, y), delta);
 
                 if (first === null) {
                     first = ball;
