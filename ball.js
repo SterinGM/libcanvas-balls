@@ -41,7 +41,7 @@ atom.declare('Balls.Ball', App.Element, {
 
         var destination = this.controller.translatePoint(this.position);
 
-        var acceleration = 10;
+        var acceleration = 25;
         var length       = destination.y - current.y;
         var time         = Math.sqrt(2 * length / acceleration);
 
