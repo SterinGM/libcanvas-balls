@@ -7,7 +7,7 @@ atom.declare('Balls.Ball', App.Element, {
         this.from     = this.settings.get('from');
         this.position = this.settings.get('position');
 
-//		new App.Clickable( this, this.redraw ).start();
+		new App.Clickable(this, this.redraw).start();
     },
 
     get controller () {
@@ -36,8 +36,6 @@ atom.declare('Balls.Ball', App.Element, {
 
     fall: function() {
         var props = {}, current = this.shape.from;
-
-        var delta = this.position.y - this.from.y;
 
         var destination = this.controller.translatePoint(this.position);
 
@@ -108,8 +106,26 @@ atom.declare('Balls.Ball', App.Element, {
         });
     },
 
+	renderSprite: function() {
+		var
+			buffer = LibCanvas.buffer(this.shape.size, true),
+			shape  = buffer.ctx.rectangle,
+			stroke = shape.clone().snapToPixel(),
+            image  = this.settings.values.image,
+            hover  = this.hover && !this.animated;
+
+		buffer.ctx
+			.fill(this.shape, buffer.ctx.drawImage(image))
+			.set({ globalAlpha: 0.6, lineWidth: hover ? 10 : 1 })
+			.stroke(stroke, hover ? 'green' : 'red');
+
+		return buffer;
+	},
+
     hide: function(count) {
         var scale = Math.ceil(this.shape.width / 15);
+
+        this.animated = true;
 
         this.animate({
             time: 50,
@@ -137,6 +153,8 @@ atom.declare('Balls.Ball', App.Element, {
                         'shape.to.y'   : this.shape.to.y - scale
                     },
                     onComplete: function () {
+                        this.animated = false;
+
                         if (count > 1) {
                             this.controller.balls[this.position.y][this.position.x] = null;
                             this.controller.hidden++;
