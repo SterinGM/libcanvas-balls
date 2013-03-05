@@ -1,5 +1,5 @@
 atom.declare('Balls.Ball', App.Element, {
-    configure: function () {
+    configure: function() {
         this.animate = new atom.Animatable(this).animate;
 
         this.animated = false;
@@ -18,10 +18,28 @@ atom.declare('Balls.Ball', App.Element, {
         return this.settings.get('color');
     },
 
-    fall: function (fn, delta) {
+    fallNext: function() {
+        var y, ball;
+
+        for (y = this.position.y - 1; y >= 0; y--) {
+            ball = this.controller.balls[y][this.position.x];
+
+            if (ball) {
+                if (!ball.animated && !this.from.equals(this.position, 1)) {
+                    ball.fall();
+                }
+
+                break;
+            }
+        }
+    },
+
+    fall: function() {
         this.animated = true;
 
         var props = {}, current = this.shape.from;
+
+        var delta = this.position.y - this.from.y;
 
         var destination = this.controller.translatePoint(this.position);
 
@@ -34,24 +52,17 @@ atom.declare('Balls.Ball', App.Element, {
         }
 
         this.animate({
-            time : (delta ? delta : 10) * 100,
-            fn   : fn ? fn : 'linear',
+            time : delta * 100,
+            fn   : 'cubic-in',
             props: props,
             onTick: function(animation) {
                 this.redraw();
 
-                if (this.position.y > 0) {
-                    var deltaTime = animation.animatable.current.allTime - animation.animatable.current.timeLeft;
+                var deltaTime = animation.animatable.current.allTime - animation.animatable.current.timeLeft;
 
-                    if (deltaTime >= 50 || animation.animatable.current.timeLeft === 0)
-                    {
-                        var ball = this.controller.balls[this.position.y - 1][this.position.x];
-
-                        if (ball && !ball.animated && !this.from.equals(this.position, 1)) {
-
-                            ball.fall(fn, delta);
-                        }
-                    }
+                if (deltaTime >= 50 || animation.animatable.current.timeLeft === 0)
+                {
+                    this.fallNext();
                 }
             }.bind(this),
             onComplete: function () {
@@ -66,17 +77,17 @@ atom.declare('Balls.Ball', App.Element, {
         return this;
     },
 
-    get x () { return this.shape.from.x },
-    get y () { return this.shape.from.y },
+    get x() { return this.shape.from.x },
+    get y() { return this.shape.from.y },
 
-    set x (value) {
+    set x(value) {
         return this.shape.move(new Point( value - this.x, 0 ));
     },
-    set y (value) {
+    set y(value) {
         return this.shape.move(new Point( 0, value - this.y ));
     },
 
-    renderTo: function (ctx) {
+    renderTo: function(ctx) {
         var image = this.settings.values.image;
 
         ctx.drawImage({

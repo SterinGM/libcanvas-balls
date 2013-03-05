@@ -74,7 +74,7 @@ atom.declare('Balls.Controller', {
 
         for (x = 0; x < size.x; x++) {
             if (this.balls[y][x] && !this.balls[y][x].animated) {
-                this.balls[y][x].fall('cubic-in', size.y);
+                this.balls[y][x].fall();
             }
         }
     },
@@ -155,11 +155,12 @@ atom.declare('Balls.Controller', {
 
     dropBalls: function() {
         var size = this.settings.get('size');
-        var y, empty, key, ball, delta;
+        var y, empty, key, ball, delta, first;
 
         this.selection.forEach(function(arr, x) {
-            key = 0;
+            key   = 0;
             empty = [];
+            first = null;
 
             for (y = size.y - 1; y >= 0; y--) {
                 ball = this.balls[y][x];
@@ -168,13 +169,11 @@ atom.declare('Balls.Controller', {
                     empty.push(y);
                 } else {
                     if (empty.length) {
-                        ball.animated = true;
-                        ball.from     = ball.position;
                         ball.position = new Point(x, empty[key]);
 
-                        delta = ball.position.y - ball.from.y;
-
-                        ball.fall(null, delta);
+                        if (first === null) {
+                            first = ball;
+                        }
 
                         this.balls[y][x] = null;
                         this.balls[empty[key]][x] = ball;
@@ -188,10 +187,18 @@ atom.declare('Balls.Controller', {
             delta = empty.length - key;
 
             for (y = delta - 1; y >= 0; y--) {
-                this.balls[y][x] = this.createBall(this.layer, new Point(x, y), delta + 1);
+                ball = this.createBall(this.layer, new Point(x, y), delta + 1);
+
+                if (first === null) {
+                    first = ball;
+                }
+
+                this.balls[y][x] = ball;
             }
 
-            this.balls[delta - 1][x].fall('cubic-in', delta + 1);
+            if (first) {
+                first.fall();
+            }
         }.bind(this));
 
         if (this.isFinish()) {
