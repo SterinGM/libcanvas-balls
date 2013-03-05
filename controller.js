@@ -104,6 +104,18 @@ atom.declare('Balls.Controller', {
             this.click(ball);
         }.bind(this));
 
+        ball.events.add('mouseover', function (e) {
+            e.preventDefault();
+
+            this.glow(ball);
+        }.bind(this));
+
+        ball.events.add('mouseout', function (e) {
+            e.preventDefault();
+
+            this.glow(ball, true);
+        }.bind(this));
+
         return ball;
     },
 
@@ -212,6 +224,21 @@ atom.declare('Balls.Controller', {
             this.selection.forEach(function(arr) {
                 arr.forEach(function(ball) {
                     ball.hide(this.count);
+                }.bind(this));
+            }.bind(this));
+        }
+    },
+
+    glow: function(ball, out) {
+        this.moved = false;
+        this.selection = [];
+
+        this.check(ball, ball.color);
+
+        if (!this.moved) {
+            this.selection.forEach(function(arr) {
+                arr.forEach(function(ball) {
+                    ball.glow(out);
                 }.bind(this));
             }.bind(this));
         }

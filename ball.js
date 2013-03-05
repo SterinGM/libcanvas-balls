@@ -2,12 +2,11 @@ atom.declare('Balls.Ball', App.Element, {
     configure: function() {
         this.animate = new atom.Animatable(this).animate;
 
+        this.scale    = Math.ceil(this.shape.width / 15);
         this.animated = false;
 
         this.from     = this.settings.get('from');
         this.position = this.settings.get('position');
-
-//		new App.Clickable( this, this.redraw ).start();
     },
 
     get controller () {
@@ -94,18 +93,14 @@ atom.declare('Balls.Ball', App.Element, {
     },
 
     set x(value) {
-        return this.shape.move(new Point( value - this.x, 0 ));
+        return this.shape.move(new Point(value - this.x, 0));
     },
     set y(value) {
-        return this.shape.move(new Point( 0, value - this.y ));
+        return this.shape.move(new Point(0, value - this.y));
     },
 
     renderTo: function(ctx) {
         var image = this.settings.values.image;
-
-        if (this.hover && !this.animated) {
-//            this.hide(0);
-        }
 
         ctx.drawImage({
             image:    image,
@@ -118,6 +113,8 @@ atom.declare('Balls.Ball', App.Element, {
         if (this.animated) {
             return;
         }
+
+        this.animated = true;
 
         var scale = Math.ceil(this.shape.width / 15);
 
@@ -147,6 +144,8 @@ atom.declare('Balls.Ball', App.Element, {
                         'shape.to.y'   : this.shape.to.y - scale
                     },
                     onComplete: function () {
+                        this.animated = false;
+
                         if (count > 1) {
                             this.controller.balls[this.position.y][this.position.x] = null;
                             this.controller.hidden++;
@@ -159,6 +158,27 @@ atom.declare('Balls.Ball', App.Element, {
                         }
                     }.bind(this)
                 });
+            }.bind(this)
+        });
+    },
+
+    glow: function(out) {
+        this.animated = true;
+
+        var factor = out ? -1 : 1;
+
+        this.animate({
+            time: 50,
+            fn : 'sine-out',
+            onTick: this.redraw,
+            props: {
+                'shape.from.x' : this.shape.from.x - this.scale * factor,
+                'shape.from.y' : this.shape.from.y - this.scale * factor,
+                'shape.to.x'   : this.shape.to.x   + this.scale * factor,
+                'shape.to.y'   : this.shape.to.y   + this.scale * factor
+            },
+            onComplete: function() {
+                this.animated = false;
             }.bind(this)
         });
     }
