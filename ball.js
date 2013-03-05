@@ -41,8 +41,6 @@ atom.declare('Balls.Ball', App.Element, {
 
         var props = {}, current = this.shape.from;
 
-        var delta = this.position.y - this.from.y;
-
         var destination = this.controller.translatePoint(this.position);
 
         var acceleration = 25;
