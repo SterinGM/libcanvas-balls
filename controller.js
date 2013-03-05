@@ -48,33 +48,27 @@ atom.declare('Balls.Controller', {
     generate: function() {
         var size = this.settings.get('size');
 
-        var
-            y, x, position,
-            balls = {};
+        var y, x, position, first, ball;
 
         this.balls = atom.array.fillMatrix(size.x, size.y, null);
 
-        for (y = size.y - 1; y >= 0; y--) {
-            for (x = 0; x < size.x; x++) {
+        for (x = 0; x < size.x; x++) {
+            first = null;
+
+            for (y = size.y - 1; y >= 0; y--) {
                 var position = new Point(x, y);
 
-                this.balls[y][x] = this.createBall(this.layer, position, size.y + 1);
+                ball = this.createBall(this.layer, position, size.y + 1);
+
+                if (first === null) {
+                    first = ball;
+                }
+
+                this.balls[y][x] = ball;
             }
-        }
 
-        this.fallBalls();
-
-        return this;
-    },
-
-    fallBalls: function() {
-        var x;
-        var size = this.settings.get('size');
-        var y = size.y - 1;
-
-        for (x = 0; x < size.x; x++) {
-            if (this.balls[y][x] && !this.balls[y][x].animated) {
-                this.balls[y][x].fall();
+            if (first) {
+                first.fall();
             }
         }
     },
