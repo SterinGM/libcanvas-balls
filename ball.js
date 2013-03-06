@@ -7,7 +7,7 @@ atom.declare('Balls.Ball', App.Element, {
         this.from     = this.settings.get('from');
         this.position = this.settings.get('position');
 
-//		new App.Clickable( this, this.redraw ).start();
+		new App.Clickable(this, this.redraw).start();
     },
 
     get controller () {
@@ -101,14 +101,10 @@ atom.declare('Balls.Ball', App.Element, {
     },
 
     renderTo: function(ctx) {
-        var image = this.settings.values.image;
-
-        if (this.hover && !this.animated) {
-//            this.hide(0);
-        }
+        var image = this.hover && !this.animated ? this.color + '_hover' : this.color;
 
         ctx.drawImage({
-            image:    image,
+            image:    this.controller.images.get(image),
             draw :    this.shape,
             optimize: true
         });
@@ -118,6 +114,8 @@ atom.declare('Balls.Ball', App.Element, {
         if (this.animated) {
             return;
         }
+
+        this.animated = true;
 
         var scale = Math.ceil(this.shape.width / 15);
 
@@ -147,6 +145,8 @@ atom.declare('Balls.Ball', App.Element, {
                         'shape.to.y'   : this.shape.to.y - scale
                     },
                     onComplete: function () {
+                        this.animated = false;
+
                         if (count > 1) {
                             this.controller.balls[this.position.y][this.position.x] = null;
                             this.controller.hidden++;

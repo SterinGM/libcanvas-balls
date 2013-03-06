@@ -5,13 +5,15 @@ atom.declare('Balls.Controller', {
         this.bindMethods(['isValidPoint']);
 
         atom.ImagePreloader.run({
-//            white:   'balls.png [15:15:120:120]',
-            red:     'balls.png [15:165:120:120]',
-            yellow:  'balls.png [15:315:120:120]',
-//            orange:  'balls.png [15:473:120:120]',
-            blue:    'balls.png [15:615:120:120]',
-//            magenta: 'balls.png [15:765:120:120]',
-            green:   'balls.png [15:915:120:120]'
+            red:    'balls.png [15:165:120:120]',
+            yellow: 'balls.png [15:315:120:120]',
+            blue:   'balls.png [15:615:120:120]',
+            green:  'balls.png [15:915:120:120]',
+
+            red_hover:    'balls.png [170:170:110:110]',
+            yellow_hover: 'balls.png [170:320:110:110]',
+            blue_hover:   'balls.png [170:620:110:110]',
+            green_hover:  'balls.png [170:920:110:110]'
         }, this.start.bind(this));
     },
 
@@ -75,13 +77,10 @@ atom.declare('Balls.Controller', {
 
     createBall: function(layer, position, delta) {
         var colors = [
-//            'white',
             'red',
             'green',
             'blue',
-            'yellow',
-//            'orange',
-//            'magenta'
+            'yellow'
         ];
 
         var color = colors.popRandom();
@@ -91,7 +90,6 @@ atom.declare('Balls.Controller', {
             from:       pos,
             position:   position,
             shape:      this.tileShape(pos),
-            image:      this.images.get(color),
             color:      color,
             controller: this
         });
