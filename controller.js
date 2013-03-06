@@ -206,13 +206,11 @@ atom.declare('Balls.Controller', {
 
         this.check(ball, ball.color);
 
-        if (!this.moved) {
-            this.selection.forEach(function(arr) {
-                arr.forEach(function(ball) {
-                    ball.hide(this.count);
-                }.bind(this));
+        this.selection.forEach(function(arr) {
+            arr.forEach(function(ball) {
+                ball.hide(this.moved ? 0 : this.count);
             }.bind(this));
-        }
+        }.bind(this));
     },
 
     check: function(ball, color) {
