@@ -102,6 +102,18 @@ atom.declare('Balls.Controller', {
             this.click(ball);
         }.bind(this));
 
+        ball.events.add('mouseover', function (e) {
+            e.preventDefault();
+
+            this.glow(ball, true);
+        }.bind(this));
+
+        ball.events.add('mouseout', function (e) {
+            e.preventDefault();
+
+            this.glow(ball);
+        }.bind(this));
+
         return ball;
     },
 
@@ -188,10 +200,10 @@ atom.declare('Balls.Controller', {
                 ball.shape.from = this.translatePoint(new Point(x, y - delta));
                 ball.shape.to   = this.translatePoint(new Point(x + 1, y -delta + 1));
 
+                ball.hover    = false;
                 ball.position = new Point(x, y);
                 ball.from     = new Point(x, y - delta);
-
-                ball.color = this.colors.clone().popRandom();
+                ball.color    = this.colors.clone().popRandom();
 
                 this.balls[y][x] = ball;
 
@@ -209,6 +221,22 @@ atom.declare('Balls.Controller', {
 
         if (this.isFinish()) {
             this.gameOver();
+        }
+    },
+
+    glow: function(ball, hover) {
+        this.moved     = false;
+        this.selection = [];
+
+        this.check(ball, ball.color);
+
+        if (!this.moved) {
+            this.selection.forEach(function(arr) {
+                arr.forEach(function(ball) {
+                    ball.hover = hover;
+                    ball.redraw();
+                }.bind(this));
+            }.bind(this));
         }
     },
 
