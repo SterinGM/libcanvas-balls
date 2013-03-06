@@ -42,6 +42,8 @@ atom.declare('Balls.Controller', {
         this.layer = app.createLayer({name: 'balls', zIndex: 1});
 
         this.generate();
+
+        this.calculation();
     },
 
     size: function() {
@@ -55,11 +57,10 @@ atom.declare('Balls.Controller', {
     },
 
     generate: function() {
+        var y, x, position, first, ball;
         var size = this.settings.get('size');
 
-        var y, x, position, first, ball;
-
-        this.balls = atom.array.fillMatrix(size.x, size.y, null);
+        this.balls  = atom.array.fillMatrix(size.x, size.y, null);
 
         for (x = 0; x < size.x; x++) {
             first = null;
@@ -130,22 +131,48 @@ atom.declare('Balls.Controller', {
         return new Point(position.x * (tile.width + tile.margin) + tile.margin, position.y * (tile.height + tile.margin) + tile.margin);
     },
 
-    isFinish: function() {
+    calculation: function() {
         var x, y, ball;
         var size = this.settings.get('size');
+        this.select = atom.array.fillMatrix(size.x, size.y, null);
 
-        for (y = 0; y < size.y - 1; y++) {
-            for (x = 0; x < size.x - 1; x++) {
+        for (y = 0; y < size.y; y++) {
+            for (x = 0; x < size.x; x++) {
+                if (this.select[y][x]) {
+                    continue;
+                }
+
                 ball = this.balls[y][x];
 
                 if (ball) {
-                    if (this.balls[y + 1][x] && ball.color === this.balls[y + 1][x].color) {
-                        return false;
-                    }
+                    this.count     = 0;
+                    this.selection = [];
 
-                    if (this.balls[y][x + 1] && ball.color === this.balls[y][x + 1].color) {
-                        return false;
-                    }
+                    this.check(ball, ball.color);
+
+                    this.selection.forEach(function(arr, x) {
+                        arr.forEach(function(ball, y) {
+                            this.select[y][x] = {
+                                count: this.count,
+                                balls: this.selection
+                            };
+                        }.bind(this));
+                    }.bind(this));
+                }
+            }
+        }
+    },
+
+    isFinish: function() {
+        var x, y, selection;
+        var size = this.settings.get('size');
+
+        for (y = 0; y < size.y; y++) {
+            for (x = 0; x < size.x; x++) {
+                selection = this.select[y][x];
+
+                if (selection && selection.count > 1) {
+                    return false;
                 }
             }
         }
@@ -157,11 +184,12 @@ atom.declare('Balls.Controller', {
         alert('GAME OVER!!!');
     },
 
-    dropBalls: function() {
+    dropBalls: function(position) {
         var size = this.settings.get('size');
         var y, empty, key, ball, delta, first;
+        var selection = this.select[position.y][position.x];
 
-        this.selection.forEach(function(arr, x) {
+        selection.balls.forEach(function(arr, x) {
             key   = 0;
             empty = [];
             delta = 0;
@@ -219,19 +247,18 @@ atom.declare('Balls.Controller', {
             }
         }.bind(this));
 
+        this.calculation();
+
         if (this.isFinish()) {
             this.gameOver();
         }
     },
 
     glow: function(ball, hover) {
-        this.moved     = false;
-        this.selection = [];
+        var selection = this.select[ball.position.y][ball.position.x];
 
-        this.check(ball, ball.color);
-
-        if (!this.moved) {
-            this.selection.forEach(function(arr) {
+        if (selection) {
+            selection.balls.forEach(function(arr) {
                 arr.forEach(function(ball) {
                     ball.hover = hover;
                     ball.redraw();
@@ -241,19 +268,23 @@ atom.declare('Balls.Controller', {
     },
 
     click: function(ball) {
-        this.moved     = false;
-        this.count     = 0;
-        this.hidden    = 0;
-        this.selection = [];
+        this.animated = false;
+        this.hidden   = 0;
 
-        this.check(ball, ball.color);
+        var selection = this.select[ball.position.y][ball.position.x];
 
-        if (this.moved) {
+        selection.balls.forEach(function(arr) {
+            arr.forEach(function(ball) {
+                this.animated = this.animated || ball.animated;
+            }.bind(this));
+        }.bind(this));
+
+        if (this.animated) {
             ball.hide(0);
         } else {
-            this.selection.forEach(function(arr) {
+            selection.balls.forEach(function(arr) {
                 arr.forEach(function(ball) {
-                    ball.hide(this.count);
+                    ball.hide(selection.count);
                 }.bind(this));
             }.bind(this));
         }
@@ -262,8 +293,6 @@ atom.declare('Balls.Controller', {
     check: function(ball, color) {
         if (typeof(this.selection[ball.position.x]) === 'undefined' || typeof(this.selection[ball.position.x][ball.position.y]) === 'undefined') {
             if (ball.color === color) {
-                this.moved = this.moved || ball.animated;
-
                 if (typeof(this.selection[ball.position.x]) === 'undefined') {
                     this.selection[ball.position.x] = [];
                 }

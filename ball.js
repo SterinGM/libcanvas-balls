@@ -147,7 +147,7 @@ atom.declare('Balls.Ball', App.Element, {
                             this.controller.hidden++;
 
                             if (this.controller.hidden === count) {
-                                this.controller.dropBalls();
+                                this.controller.dropBalls(this.position);
                             }
                         }
                     }.bind(this)
