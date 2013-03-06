@@ -4,6 +4,13 @@ atom.declare('Balls.Controller', {
 
         this.bindMethods(['isValidPoint']);
 
+        this.colors = [
+            'red',
+            'green',
+            'blue',
+            'yellow'
+        ];
+
         atom.ImagePreloader.run({
             red:    'balls.png [15:165:120:120]',
             yellow: 'balls.png [15:315:120:120]',
@@ -76,15 +83,8 @@ atom.declare('Balls.Controller', {
     },
 
     createBall: function(layer, position, delta) {
-        var colors = [
-            'red',
-            'green',
-            'blue',
-            'yellow'
-        ];
-
-        var color = colors.popRandom();
-        var pos = new Point(position.x, position.y - delta);
+        var color = this.colors.clone().popRandom();
+        var pos   = new Point(position.x, position.y - delta);
 
         var ball = new Balls.Ball(layer, {
             from:       pos,
@@ -152,41 +152,55 @@ atom.declare('Balls.Controller', {
         this.selection.forEach(function(arr, x) {
             key   = 0;
             empty = [];
+            delta = 0;
             first = null;
 
             for (y = size.y - 1; y >= 0; y--) {
                 ball = this.balls[y][x];
 
                 if (!ball) {
-                    empty.push(y);
+                    delta++;
+
+                    if (!key) {
+                        key = y;
+                    }
                 } else {
-                    if (empty.length) {
-                        ball.position = new Point(x, empty[key]);
+                    if (key) {
+                        ball.position = new Point(x, key);
 
                         if (first === null) {
                             first = ball;
                         }
 
                         this.balls[y][x] = null;
-                        this.balls[empty[key]][x] = ball;
+                        this.balls[key][x] = ball;
 
-                        empty.push(y);
-                        key++;
+                        key--;
                     }
                 }
             }
 
-            delta = empty.length - key;
+            y = delta;
 
-            for (y = delta - 1; y >= 0; y--) {
-                ball = this.createBall(this.layer, new Point(x, y), delta);
+            arr.forEach(function(ball) {
+                y--;
+
+                ball.shape.from = this.translatePoint(new Point(x, y - delta));
+                ball.shape.to   = this.translatePoint(new Point(x + 1, y -delta + 1));
+
+                ball.position = new Point(x, y);
+                ball.from     = new Point(x, y - delta);
+
+                ball.color = this.colors.clone().popRandom();
+
+                this.balls[y][x] = ball;
 
                 if (first === null) {
                     first = ball;
                 }
 
                 this.balls[y][x] = ball;
-            }
+            }.bind(this));
 
             if (first) {
                 first.fall();

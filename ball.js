@@ -4,6 +4,7 @@ atom.declare('Balls.Ball', App.Element, {
 
         this.animated = false;
 
+        this.color    = this.settings.get('color');
         this.from     = this.settings.get('from');
         this.position = this.settings.get('position');
 
@@ -12,10 +13,6 @@ atom.declare('Balls.Ball', App.Element, {
 
     get controller () {
         return this.settings.get('controller');
-    },
-
-    get color () {
-        return this.settings.get('color');
     },
 
     fallNext: function() {
@@ -153,8 +150,6 @@ atom.declare('Balls.Ball', App.Element, {
 
                             if (this.controller.hidden === count) {
                                 this.controller.dropBalls();
-
-                                this.destroy();
                             }
                         }
                     }.bind(this)
