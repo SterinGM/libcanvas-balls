@@ -63,7 +63,7 @@ atom.declare('Balls.Ball', App.Element, {
 
                 var deltaTime = animation.animatable.current.allTime - animation.animatable.current.timeLeft;
 
-                if (deltaTime >= 50 || animation.animatable.current.timeLeft === 0)
+                if (deltaTime >= 20 || animation.animatable.current.timeLeft === 0)
                 {
                     this.fallNext();
                 }
