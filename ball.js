@@ -100,7 +100,7 @@ atom.declare('Balls.Ball', App.Element, {
     renderTo: function(ctx) {
         var image = this.hover && !this.animated ? this.color + '_hover' : this.color;
 
-        ctx.drawImage({
+        ctx.set({globalAlpha: 1}).drawImage({
             image:    this.controller.images.get(image),
             draw :    this.shape,
             optimize: true

@@ -7,12 +7,23 @@ atom.declare('Balls.Info', App.Element, {
     configure: function () {
         this.bindMethods(['show', 'hide']);
 
-        this.text  = '';
-        this.shape = new Rectangle(0, 0, 70, 25);
+
+        this.width  = 70;
+        this.height = 25;
+        this.text   = '';
+        this.size   = this.layer.app.settings.get('size');
+        this.shape  = new RoundedRectangle(0, 0, this.width, this.height).setRadius(10);
+    },
+
+    get ball() {
+        return this.settings.get('ball');
     },
 
     updateShape: function (from) {
-        this.shape.moveTo(from).move([10, 10]);
+        var x = (from.x + this.width  + 20) > this.size.x ? (-this.width  - 10) : 10;
+        var y = (from.y + this.height + 20) > this.size.y ? (-this.height - 10) : 10;
+
+        this.shape.moveTo(from).move([x, y]);
     },
 
     show: function () {
@@ -26,8 +37,8 @@ atom.declare('Balls.Info', App.Element, {
     },
 
     renderTo: function (ctx) {
-        ctx.fill(this.shape, 'white')
-        .strokeRect(this.shape)
+        ctx.set({globalAlpha: 0.7}).fill(this.shape, this.ball.color)
+        .stroke(this.shape)
         .text({
             to   :    this.shape,
             text :    this.text,
