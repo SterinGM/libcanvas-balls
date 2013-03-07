@@ -39,7 +39,7 @@ atom.declare('Balls.Controller', {
 
         this.mouseHandler = new App.MouseHandler({mouse: mouse, app: app});
 
-        this.layer = app.createLayer({name: 'balls', zIndex: 1});
+        this.layer = app.createLayer({intersection: 'all', name: 'balls', zIndex: 1});
 
         this.generate();
 
