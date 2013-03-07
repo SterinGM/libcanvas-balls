@@ -5,7 +5,7 @@ atom.declare('Balls.Controller', {
         this.bindMethods(['isValidPoint']);
 
         this.maximum = atom.cookie.get('sgm.balls.max');
-        this.maximum = this.maximum ? this.maximum : 0;
+        this.maximum = this.maximum ? parseInt(this.maximum, 10) : 0;
 
         this.colors = [
             'red',
