@@ -53,7 +53,7 @@ atom.declare('Balls.Controller', {
             to:   new Point(size.x + 200 - 20, 130)
         });
 
-        this.stats.maxValue.value = this.maximum;
+        this.stats.maxValue.current = this.maximum;
         this.stats.maxValue.redraw();
 
         this.generate();
@@ -339,16 +339,16 @@ atom.declare('Balls.Controller', {
                 cball.score.fade();
 
                 this.stats.scoreValue.value += points;
-                this.stats.scoreValue.redraw();
+                this.stats.scoreValue.increment();
 
                 this.stats.clickValue.value++;
-                this.stats.clickValue.redraw();
+                this.stats.clickValue.increment();
 
                 if (this.maximum < this.stats.scoreValue.value) {
-                    atom.cookie.set('sgm.balls.max', this.stats.scoreValue.value);
-
                     this.stats.maxValue.value = this.stats.scoreValue.value;
-                    this.stats.maxValue.redraw();
+                    this.stats.maxValue.increment();
+
+                    atom.cookie.set('sgm.balls.max', this.stats.scoreValue.value);
                 }
             }
         }
