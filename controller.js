@@ -47,7 +47,7 @@ atom.declare('Balls.Controller', {
 
         this.stats = new Stats(this.layer, {
             from: new Point(size.x + 20, 20),
-            to:   new Point(size.x + 200 - 20, 120)
+            to:   new Point(size.x + 200 - 20, 130)
         });
 
         this.generate();
@@ -332,8 +332,14 @@ atom.declare('Balls.Controller', {
                 cball.score.updateShape(cball.shape.center);
                 cball.score.fade();
 
-                this.stats.score += points;
-                this.stats.redraw();
+                this.stats.scoreValue.value += points;
+                this.stats.scoreValue.redraw();
+
+                this.stats.clickValue.value++;
+                this.stats.clickValue.redraw();
+
+                this.stats.maxValue.value += points;
+                this.stats.maxValue.redraw();
             }
         }
     },
