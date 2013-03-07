@@ -36,7 +36,14 @@ atom.declare('Balls.Info', App.Element, {
     },
 
     renderTo: function (ctx) {
-        ctx.set({globalAlpha: 0.7}).fill(this.shape, this.ball.color)
+        var colors = {
+            red: '#F07D7D',
+            green: '#86F07D',
+            blue: '#7DC2F0',
+            yellow: '#F0E87D'
+        };
+
+        ctx.set({globalAlpha: 0.7}).fill(this.shape, colors[this.ball.color])
         .stroke(this.shape)
         .text({
             to   :    this.shape,
@@ -45,7 +52,8 @@ atom.declare('Balls.Info', App.Element, {
             align:    'center',
             optimize: true,
             weight:   'bold',
-            padding:  0
+            padding:  0,
+            shadow:   '0 0 5 white'
         });
     }
 });
