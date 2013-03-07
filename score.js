@@ -55,7 +55,6 @@ atom.declare('Balls.Score', App.Element, {
             text :    this.text,
             color:    this.color,
             size:     22,
-            border: 12,
             align:    'center',
             optimize: true,
             weight:   'bold',

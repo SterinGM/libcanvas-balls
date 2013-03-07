@@ -29,17 +29,26 @@ atom.declare('Balls.Controller', {
 
         this.images = images;
 
+        var size = this.size();
+
         app = new App({
-            size: this.size()
+            size: size
         });
 
         new Field(app, this.settings);
+
+        app.container.size = new Size(size.x + 200, size.y);
 
         mouse = new Mouse(app.container.bounds);
 
         this.mouseHandler = new App.MouseHandler({mouse: mouse, app: app});
 
         this.layer = app.createLayer({intersection: 'all', name: 'balls', zIndex: 1});
+
+        this.stats = new Stats(this.layer, {
+            from: new Point(size.x + 20, 20),
+            to:   new Point(size.x + 200 - 20, 120)
+        });
 
         this.generate();
 
@@ -313,16 +322,19 @@ atom.declare('Balls.Controller', {
             selection.balls.forEach(function(arr) {
                 arr.forEach(function(ball) {
                     ball.hide(selection.count);
-
-                    if (selection.count > 1) {
-                        var points = this.getScore(selection.count);
-
-                        cball.score.text = '+' + points;
-                        cball.score.updateShape(cball.shape.center);
-                        cball.score.fade();
-                    }
                 }.bind(this));
             }.bind(this));
+
+            if (selection.count > 1) {
+                var points = this.getScore(selection.count);
+
+                cball.score.text = '+' + points;
+                cball.score.updateShape(cball.shape.center);
+                cball.score.fade();
+
+                this.stats.score += points;
+                this.stats.redraw();
+            }
         }
     },
 
