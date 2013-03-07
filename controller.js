@@ -4,6 +4,9 @@ atom.declare('Balls.Controller', {
 
         this.bindMethods(['isValidPoint']);
 
+        this.maximum = atom.cookie.get('sgm.balls.max');
+        this.maximum = this.maximum ? this.maximum : 0;
+
         this.colors = [
             'red',
             'green',
@@ -49,6 +52,9 @@ atom.declare('Balls.Controller', {
             from: new Point(size.x + 20, 20),
             to:   new Point(size.x + 200 - 20, 130)
         });
+
+        this.stats.maxValue.value = this.maximum;
+        this.stats.maxValue.redraw();
 
         this.generate();
 
@@ -338,8 +344,12 @@ atom.declare('Balls.Controller', {
                 this.stats.clickValue.value++;
                 this.stats.clickValue.redraw();
 
-                this.stats.maxValue.value += points;
-                this.stats.maxValue.redraw();
+                if (this.maximum < this.stats.scoreValue.value) {
+                    atom.cookie.set('sgm.balls.max', this.stats.scoreValue.value);
+
+                    this.stats.maxValue.value = this.stats.scoreValue.value;
+                    this.stats.maxValue.redraw();
+                }
             }
         }
     },
