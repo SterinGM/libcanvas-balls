@@ -8,7 +8,8 @@ atom.declare('Balls.Ball', App.Element, {
         this.from     = this.settings.get('from');
         this.position = this.settings.get('position');
 
-        this.info = new Balls.Info(this.layer, {ball: this, zIndex: 2});
+        this.info  = new Balls.Info(this.layer, {ball: this, zIndex: 2});
+        this.score = new Balls.Score(this.layer, {ball: this, zIndex: 3});
     },
 
     get controller () {

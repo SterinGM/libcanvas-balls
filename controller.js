@@ -264,7 +264,7 @@ atom.declare('Balls.Controller', {
         var selection = this.select[ball.position.y][ball.position.x];
 
         if (selection && selection.count > 1 && !selection.clicked) {
-            var points = Math.round(5 * Math.pow(selection.count, 1.2));
+            var points = this.getScore(selection.count);
 
             ball.info.text = points + ' (' + selection.count + ')';
             ball.info.updateShape(this.mouseHandler.mouse.point);
@@ -291,11 +291,11 @@ atom.declare('Balls.Controller', {
         }
     },
 
-    click: function(ball) {
+    click: function(cball) {
         this.animated = false;
         this.hidden   = 0;
 
-        var selection = this.select[ball.position.y][ball.position.x];
+        var selection = this.select[cball.position.y][cball.position.x];
 
         selection.balls.forEach(function(arr) {
             arr.forEach(function(ball) {
@@ -304,18 +304,30 @@ atom.declare('Balls.Controller', {
         }.bind(this));
 
         if (this.animated) {
-            ball.hide(0);
+            cball.hide(0);
         } else {
-            ball.info.hide();
+            cball.info.hide();
 
-            this.select[ball.position.y][ball.position.x].clicked = true;
+            this.select[cball.position.y][cball.position.x].clicked = true;
 
             selection.balls.forEach(function(arr) {
                 arr.forEach(function(ball) {
                     ball.hide(selection.count);
+
+                    if (selection.count > 1) {
+                        var points = this.getScore(selection.count);
+
+                        cball.score.text = '+' + points;
+                        cball.score.updateShape(cball.shape.center);
+                        cball.score.fade();
+                    }
                 }.bind(this));
             }.bind(this));
         }
+    },
+
+    getScore: function(count) {
+        return Math.round(5 * Math.pow(count, 1.2));
     },
 
     check: function(ball, color) {

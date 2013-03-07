@@ -1,17 +1,20 @@
-/** @class Balls.Info */
+/** @class Balls.Score */
 
-atom.declare('Balls.Info', App.Element, {
+atom.declare('Balls.Score', App.Element, {
 
     settings: { hidden: true },
 
     configure: function () {
+        this.animate = new atom.Animatable(this).animate;
+
         this.bindMethods(['show', 'hide']);
 
-        this.width  = 70;
+        this.width  = 50;
         this.height = 25;
         this.text   = '';
+        this.color  = 'black';
         this.size   = this.layer.app.settings.get('size');
-        this.shape  = new RoundedRectangle(0, 0, this.width, this.height).setRadius(10);
+        this.shape  = new Rectangle(0, 0, this.width, this.height);
     },
 
     get ball() {
@@ -19,10 +22,7 @@ atom.declare('Balls.Info', App.Element, {
     },
 
     updateShape: function (from) {
-        var x = (from.x + this.width  + 20) > this.size.x ? (-this.width  - 10) : 10;
-        var y = (from.y + this.height + 20) > this.size.y ? (-this.height - 10) : 10;
-
-        this.shape.moveTo(from).move([x, y]);
+        this.shape.moveTo(from).move([-25, -10]);
     },
 
     show: function () {
@@ -35,17 +35,32 @@ atom.declare('Balls.Info', App.Element, {
         this.redraw();
     },
 
+    fade: function () {
+        this.color = this.ball.color;
+
+        this.show();
+
+        this.animate({
+			props: {
+				'shape.from.y': this.shape.from.y - 50
+			},
+			onTick: this.redraw,
+			onComplete: this.hide
+		});
+    },
+
     renderTo: function (ctx) {
-        ctx.set({globalAlpha: 0.7}).fill(this.shape, this.ball.color)
-        .stroke(this.shape)
-        .text({
+        ctx.text({
             to   :    this.shape,
             text :    this.text,
-            color:    'black',
+            color:    this.color,
+            size:     22,
+            border: 12,
             align:    'center',
             optimize: true,
             weight:   'bold',
-            padding:  0
+            padding:  0,
+            shadow: '1 1 1 black'
         });
     }
 });
