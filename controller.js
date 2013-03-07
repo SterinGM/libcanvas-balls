@@ -339,7 +339,7 @@ atom.declare('Balls.Controller', {
     },
 
     getScore: function(count) {
-        return Math.round(5 * Math.pow(count, 1.2));
+        return Math.round(4 * Math.pow(count, 1.5));
     },
 
     check: function(ball, color) {
