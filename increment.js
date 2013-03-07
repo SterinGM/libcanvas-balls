@@ -13,10 +13,9 @@ atom.declare('Increment', App.Element, {
         this.animatable.stop();
 
         var current = this.current;
-        var delta   = this.value - this.current;
 
         this.animate({
-            time: (delta > 20 ? 20 : delta) * 50,
+            time: 1000,
 			props: {
                 current: this.value
             },

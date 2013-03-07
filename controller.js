@@ -341,8 +341,8 @@ atom.declare('Balls.Controller', {
                 this.stats.scoreValue.value += points;
                 this.stats.scoreValue.increment();
 
-                this.stats.clickValue.value++;
-                this.stats.clickValue.increment();
+                this.stats.clickValue.current++;
+                this.stats.clickValue.redraw();
 
                 if (this.maximum < this.stats.scoreValue.value) {
                     this.stats.maxValue.value = this.stats.scoreValue.value;
