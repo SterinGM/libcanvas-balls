@@ -7,9 +7,9 @@ atom.declare('Stats', App.Element, {
 
         this.shape = new Rectangle(from, to);
 
-        this.score = new Rectangle(from, new Point(to.x, from.y + 35));
-        this.click = new Rectangle(new Point(from.x, from.y + 35), new Point(to.x, from.y + 70));
-        this.max   = new Rectangle(new Point(from.x, from.y + 70), new Point(to.x, from.y + 105));
+        this.score = new Rectangle(new Point(from.x + 10, from.y),      new Point(to.x - 10, from.y + 35));
+        this.click = new Rectangle(new Point(from.x + 10, from.y + 35), new Point(to.x - 10, from.y + 70));
+        this.max   = new Rectangle(new Point(from.x + 10, from.y + 70), new Point(to.x - 10, from.y + 105));
 
         this.scoreValue = new Increment(this.layer, {shape: this.score, zIndex: 4, color: 'green'});
         this.clickValue = new Increment(this.layer, {shape: this.click, zIndex: 4, color: 'yellow'});
@@ -20,7 +20,7 @@ atom.declare('Stats', App.Element, {
 		ctx.set({globalAlpha: 0.5}).fill(this.shape, 'grey').set({globalAlpha: 1})
             .text({
                 to   :    this.score,
-                text :    ' Score: ',
+                text :    'Score:',
                 color:    'white',
                 size:     22,
                 align:    'left',
@@ -31,7 +31,7 @@ atom.declare('Stats', App.Element, {
             })
             .text({
                 to   :    this.click,
-                text :    ' Click: ',
+                text :    'Click:',
                 color:    'white',
                 size:     22,
                 align:    'left',
@@ -42,7 +42,7 @@ atom.declare('Stats', App.Element, {
             })
             .text({
                 to   :    this.max,
-                text :    ' Max: ',
+                text :    'Max:',
                 color:    'white',
                 size:     22,
                 align:    'left',

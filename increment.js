@@ -27,7 +27,7 @@ atom.declare('Increment', App.Element, {
 	renderTo: function (ctx) {
 		ctx.set({globalAlpha: 1}).text({
                 to   :    this.shape,
-                text :    Math.ceil(this.current) + '  ',
+                text :    Math.round(this.current),
                 color:    this.settings.get('color'),
                 size:     22,
                 align:    'right',
