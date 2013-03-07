@@ -9,12 +9,14 @@ atom.declare('Balls.Score', App.Element, {
 
         this.bindMethods(['show', 'hide']);
 
-        this.width  = 50;
-        this.height = 25;
-        this.text   = '';
-        this.color  = 'black';
-        this.size   = this.layer.app.settings.get('size');
-        this.shape  = new Rectangle(0, 0, this.width, this.height);
+        this.opacity  = 1;
+        this.fontSize = 22;
+        this.width    = 50;
+        this.height   = 25;
+        this.text     = '';
+        this.color    = 'black';
+        this.size     = this.layer.app.settings.get('size');
+        this.shape    = new Rectangle(0, 0, this.width, this.height);
     },
 
     get ball() {
@@ -26,6 +28,10 @@ atom.declare('Balls.Score', App.Element, {
     },
 
     show: function () {
+        this.opacity  = 1;
+        this.color    = this.ball.color;
+        this.fontSize = 22;
+
         this.settings.set({ hidden: false });
         this.redraw();
     },
@@ -36,25 +42,36 @@ atom.declare('Balls.Score', App.Element, {
     },
 
     fade: function () {
-        this.color = this.ball.color;
-
         this.show();
+
+        var fontSize = this.fontSize;
+        var opacity  = this.opacity;
 
         this.animate({
 			props: {
 				'shape.from.y': this.shape.from.y - 50
 			},
 			onTick: this.redraw,
-			onComplete: this.hide
+			onComplete: function() {
+                this.animate({
+                    time: 300,
+                    props: {
+                        fontSize: 0,
+                        opacity:  0
+                    },
+                    onTick: this.redraw,
+                    onComplete: this.hide
+                });
+            }.bind(this)
 		});
     },
 
     renderTo: function (ctx) {
-        ctx.text({
+        ctx.set({opacity: this.opacity}).text({
             to   :    this.shape,
             text :    this.text,
             color:    this.color,
-            size:     22,
+            size:     this.fontSize,
             align:    'center',
             optimize: true,
             weight:   'bold',
