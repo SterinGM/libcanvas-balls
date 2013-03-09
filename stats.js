@@ -11,15 +11,21 @@ atom.declare('Stats', App.Element, {
         this.click = new Rectangle(new Point(from.x + 10, from.y + 35), new Point(to.x - 10, from.y + 70));
         this.max   = new Rectangle(new Point(from.x + 10, from.y + 70), new Point(to.x - 10, from.y + 105));
 
-        this.scoreValue = new Increment(this.layer, {shape: this.score, zIndex: this.zIndex + 5, color: 'green'});
-        this.clickValue = new Increment(this.layer, {shape: this.click, zIndex: this.zIndex + 5, color: 'yellow'});
-        this.maxValue   = new Increment(this.layer, {shape: this.max,   zIndex: this.zIndex + 5, color: 'red'});
+        this.scoreValue = new Increment(this.layer, {shape: this.score, zIndex: this.zIndex + 1, color: 'green'});
+        this.clickValue = new Increment(this.layer, {shape: this.click, zIndex: this.zIndex + 1, color: 'yellow'});
+        this.maxValue   = new Increment(this.layer, {shape: this.max,   zIndex: this.zIndex + 1, color: 'red'});
+
+        this.maximum = atom.cookie.get('sgm.balls.max');
+        this.maximum = this.maximum ? parseInt(this.maximum, 10) : 0;
+
+        this.maxValue.current = this.maximum;
+        this.maxValue.redraw();
     },
 
     renderTo: function (ctx) {
         ctx
             .set({opacity: 0.5})
-            .stroke(this.shape, 'black')
+//            .stroke(this.shape, 'black')
             .fill(this.shape, 'grey')
             .set({opacity: 1})
             .text({
