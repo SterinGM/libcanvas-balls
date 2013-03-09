@@ -11,9 +11,9 @@ atom.declare('Stats', App.Element, {
         this.click = new Rectangle(new Point(from.x + 10, from.y + 35), new Point(to.x - 10, from.y + 70));
         this.max   = new Rectangle(new Point(from.x + 10, from.y + 70), new Point(to.x - 10, from.y + 105));
 
-        this.scoreValue = new Increment(this.layer, {shape: this.score, zIndex: this.zIndex + 1, color: 'green'});
-        this.clickValue = new Increment(this.layer, {shape: this.click, zIndex: this.zIndex + 1, color: 'yellow'});
-        this.maxValue   = new Increment(this.layer, {shape: this.max,   zIndex: this.zIndex + 1, color: 'red'});
+        this.scoreValue = new Increment(this.layer, {shape: this.score, zIndex: this.zIndex + 5, color: 'green'});
+        this.clickValue = new Increment(this.layer, {shape: this.click, zIndex: this.zIndex + 5, color: 'yellow'});
+        this.maxValue   = new Increment(this.layer, {shape: this.max,   zIndex: this.zIndex + 5, color: 'red'});
     },
 
     renderTo: function (ctx) {
@@ -28,7 +28,7 @@ atom.declare('Stats', App.Element, {
                 color:    'white',
                 size:     22,
                 optimize: true,
-                shadow:   '1 1 1 black'
+                shadow:   '1 1 3 black'
             })
             .text({
                 to   :    this.click,
@@ -36,7 +36,7 @@ atom.declare('Stats', App.Element, {
                 color:    'white',
                 size:     22,
                 optimize: true,
-                shadow:   '1 1 1 black'
+                shadow:   '1 1 3 black'
             })
             .text({
                 to   :    this.max,
@@ -44,7 +44,7 @@ atom.declare('Stats', App.Element, {
                 color:    'white',
                 size:     22,
                 optimize: true,
-                shadow:   '1 1 1 black'
+                shadow:   '1 1 3 black'
             });
     }
 });

@@ -76,7 +76,7 @@ atom.declare('Balls.Score', App.Element, {
             optimize: true,
             weight:   'bold',
             padding:  0,
-            shadow: '1 1 1 black'
+            shadow: '1 1 3 black'
         });
     }
 });

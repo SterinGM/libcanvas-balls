@@ -33,7 +33,7 @@ atom.declare('Increment', App.Element, {
             align:    'right',
             optimize: true,
             weight:   'bold',
-            shadow:   '1 1 1 black'
+            shadow:   '1 1 3 black'
         });
     }
 });
