@@ -64,12 +64,11 @@ atom.declare('Balls.Controller', {
         });
 
         this.game = new Game(this.layer, {
-            size:    this.settings.get('size'),
-            tile:    this.settings.get('tile'),
-            shape:   this.field.shape,
-            handler: new App.MouseHandler({mouse: new Mouse(app.container.bounds), app: app}),
-            stats:   this.stats,
-            zIndex:  40
+            size:   this.settings.get('size'),
+            tile:   this.settings.get('tile'),
+            shape:  this.field.shape,
+            stats:  this.stats,
+            zIndex: 40
         });
     },
 

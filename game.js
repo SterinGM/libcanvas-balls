@@ -3,9 +3,10 @@ atom.declare('Game', App.Element, {
         this.bindMethods(['isValidPoint']);
 
         this.res    = this.layer.app.settings.get('resources');
-        this.mouse  = this.settings.get('handler');
         this.stats  = this.settings.get('stats');
         this.colors = this.res.colors;
+
+        this.mouseHandler = new App.MouseHandler({mouse: new Mouse(this.layer.app.container.bounds), app: this.layer.app});
 
         this.generate();
 
@@ -54,7 +55,7 @@ atom.declare('Game', App.Element, {
             zIndex:     this.zIndex + 5
         });
 
-        this.mouse.subscribe(ball);
+        this.mouseHandler.subscribe(ball);
 
         ball.events.add('mousedown', function (e) {
             e.preventDefault();
@@ -179,7 +180,7 @@ atom.declare('Game', App.Element, {
             var points = this.getScore(selection.count);
 
             ball.info.text = points + ' (' + selection.count + ')';
-            ball.info.updateShape(this.mouse.mouse.point);
+            ball.info.updateShape(this.mouseHandler.mouse.point);
             ball.info.show();
         } else {
             ball.info.hide();
