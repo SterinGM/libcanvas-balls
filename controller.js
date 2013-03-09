@@ -66,8 +66,7 @@ atom.declare('Balls.Controller', {
         this.game = new Game(this.layer, {
             size:    this.settings.get('size'),
             tile:    this.settings.get('tile'),
-            shape:   new Rectangle(new Point(this.field.shape.from.x, 0), this.field.shape.to),
-            from:    this.field.shape.from,
+            shape:   this.field.shape,
             handler: new App.MouseHandler({mouse: new Mouse(app.container.bounds), app: app}),
             stats:   this.stats,
             zIndex:  40

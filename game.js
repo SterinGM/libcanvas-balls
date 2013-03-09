@@ -95,7 +95,7 @@ atom.declare('Game', App.Element, {
         var from = position.x * (tile.width + tile.margin) + tile.margin;
         var to   = position.y * (tile.height + tile.margin) + tile.margin;
 
-        return new Point(from, to).move(this.settings.get('from'));
+        return new Point(from, to).move(this.shape.from);
     },
 
     calculation: function() {
