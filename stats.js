@@ -25,8 +25,7 @@ atom.declare('Stats', App.Element, {
     renderTo: function (ctx) {
         ctx
             .set({opacity: 0.5})
-//            .stroke(this.shape, 'black')
-            .fill(this.shape, 'grey')
+            .fill(this.shape, 'black')
             .set({opacity: 1})
             .text({
                 to   :    this.score,
