@@ -241,7 +241,7 @@ atom.declare('Game', App.Element, {
                 this.stats.clickValue.current++;
                 this.stats.clickValue.redraw();
 
-                if (this.maximum < this.stats.scoreValue.value) {
+                if (this.stats.maximum < this.stats.scoreValue.value) {
                     this.stats.maxValue.value = this.stats.scoreValue.value;
                     this.stats.maxValue.increment();
 
