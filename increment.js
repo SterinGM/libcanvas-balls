@@ -16,25 +16,24 @@ atom.declare('Increment', App.Element, {
 
         this.animate({
             time: 1000,
-			props: {
+            props: {
                 current: this.value
             },
-			onTick: this.redraw,
-			onComplete: this.redraw
-		});
+            onTick: this.redraw,
+            onComplete: this.redraw
+        });
     },
 
-	renderTo: function (ctx) {
-		ctx.set({globalAlpha: 1}).text({
-                to   :    this.shape,
-                text :    Math.round(this.current),
-                color:    this.settings.get('color'),
-                size:     22,
-                align:    'right',
-                optimize: true,
-                weight:   'bold',
-                padding:  0,
-                shadow:   '1 1 1 black'
-            });
-	}
+    renderTo: function (ctx) {
+        ctx.text({
+            to   :    this.shape,
+            text :    Math.round(this.current),
+            color:    this.settings.get('color'),
+            size:     22,
+            align:    'right',
+            optimize: true,
+            weight:   'bold',
+            shadow:   '1 1 1 black'
+        });
+    }
 });
