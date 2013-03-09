@@ -1,13 +1,5 @@
-atom.declare('Field', Tile, {
-	initialize: function(app, settings) {
-		this.settings = new atom.Settings(settings);
-
-        this.create(app);
-	},
-
-    create: function(app) {
-		var layer = app.createLayer({name: 'field', zIndex: 0});
-
+atom.declare('Field', App.Element, {
+    configure: function() {
         var size = this.settings.get('size');
 
         var y, x, position, odd;
@@ -20,12 +12,31 @@ atom.declare('Field', Tile, {
 
                 odd = !odd;
 
-                new Field.Tile(layer, {
+                new Tile(this.layer, {
                     position: position,
                     shape:    this.tileShape(position),
+                    zIndex:   this.zIndex + 5,
                     odd:      odd
                 });
             }
         }
+
+        this.redraw();
+    },
+
+    tileShape: function(position) {
+        return new Rectangle({
+            from: this.translatePoint(position).move(this.shape.from),
+            size: this.settings.get('tile')
+        });
+    },
+
+    translatePoint: function(position) {
+        var tile = this.settings.get('tile');
+
+        var x = position.x * (tile.width  + tile.margin) + tile.margin;
+        var y = position.y * (tile.height + tile.margin) + tile.margin;
+
+        return new Point(x, y);
     }
 });
