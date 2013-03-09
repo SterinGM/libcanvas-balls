@@ -77,6 +77,6 @@ atom.declare('Balls.Score', App.Element, {
             weight:   'bold',
             padding:  0,
             shadow: '1 1 3 black'
-        });
+        }).set({opacity: 1});
     }
 });

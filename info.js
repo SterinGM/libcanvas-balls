@@ -43,17 +43,18 @@ atom.declare('Balls.Info', App.Element, {
             yellow: '#F0E87D'
         };
 
-        ctx.set({globalAlpha: 0.7}).fill(this.shape, colors[this.ball.color])
-        .stroke(this.shape)
-        .text({
-            to   :    this.shape,
-            text :    this.text,
-            color:    'black',
-            align:    'center',
-            optimize: true,
-            weight:   'bold',
-            padding:  0,
-            shadow:   '0 0 5 white'
-        });
+        ctx.set({opacity: 0.7})
+            .fill(this.shape, colors[this.ball.color])
+            .stroke(this.shape)
+            .text({
+                to   :    this.shape,
+                text :    this.text,
+                color:    'black',
+                align:    'center',
+                optimize: true,
+                weight:   'bold',
+                padding:  0,
+                shadow:   '0 0 5 white'
+            }).set({opacity: 1});
     }
 });

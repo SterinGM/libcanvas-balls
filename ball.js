@@ -4,23 +4,25 @@ atom.declare('Balls.Ball', App.Element, {
 
         this.animated = false;
 
+        this.res = this.layer.app.settings.get('resources');
+
         this.color    = this.settings.get('color');
         this.from     = this.settings.get('from');
         this.position = this.settings.get('position');
 
-        this.info  = new Balls.Info(this.layer, {ball: this, zIndex: 2});
-        this.score = new Balls.Score(this.layer, {ball: this, zIndex: 3});
+        this.info  = new Balls.Info(this.layer,  {ball: this, zIndex: this.zIndex + 1});
+        this.score = new Balls.Score(this.layer, {ball: this, zIndex: this.zIndex + 1});
     },
 
-    get controller () {
-        return this.settings.get('controller');
+    get game () {
+        return this.settings.get('game');
     },
 
     fallNext: function() {
         var y, ball;
 
         for (y = this.position.y - 1; y >= 0; y--) {
-            ball = this.controller.balls[y][this.position.x];
+            ball = this.game.balls[y][this.position.x];
 
             if (ball) {
                 if (!ball.animated && !this.from.equals(this.position, 1)) {
@@ -39,7 +41,7 @@ atom.declare('Balls.Ball', App.Element, {
 
         var props = {}, current = this.shape.from;
 
-        var destination = this.controller.translatePoint(this.position);
+        var destination = this.game.translatePoint(this.position);
 
         var acceleration = 25;
         var length       = destination.y - current.y;
@@ -101,8 +103,8 @@ atom.declare('Balls.Ball', App.Element, {
     renderTo: function(ctx) {
         var image = this.hover && !this.animated ? this.color + '_hover' : this.color;
 
-        ctx.set({globalAlpha: 1}).drawImage({
-            image:    this.controller.images.get(image),
+        ctx.set({opacity: 1}).drawImage({
+            image:    this.res.images.get(image),
             draw :    this.shape,
             optimize: true
         });
@@ -146,11 +148,11 @@ atom.declare('Balls.Ball', App.Element, {
                         this.animated = false;
 
                         if (count > 1) {
-                            this.controller.balls[this.position.y][this.position.x] = null;
-                            this.controller.hidden++;
+                            this.game.balls[this.position.y][this.position.x] = null;
+                            this.game.hidden++;
 
-                            if (this.controller.hidden === count) {
-                                this.controller.dropBalls(this.position);
+                            if (this.game.hidden === count) {
+                                this.game.dropBalls(this.position);
                             }
                         }
                     }.bind(this)
