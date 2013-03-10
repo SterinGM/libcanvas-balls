@@ -39,9 +39,13 @@ atom.declare('Balls.Ball', App.Element, {
             return;
         }
 
-        var props = {}, current = this.shape.from;
-
+        var props       = {};
+        var current     = this.shape.from;
         var destination = this.game.translatePoint(this.position);
+
+        if (destination.equals(current, 1)) {
+            return;
+        }
 
         var acceleration = 25;
         var length       = destination.y - current.y;
@@ -79,6 +83,12 @@ atom.declare('Balls.Ball', App.Element, {
                 this.from = this.position;
 
                 this.animated = false;
+
+                if (typeof(this.game.balls[this.position.y + 1]) !== 'undefined') {
+                    var ball = this.game.balls[this.position.y + 1][this.position.x];
+
+                    ball.fall();
+                }
             }.bind(this)
         });
 
