@@ -5,6 +5,8 @@ atom.declare('Game', App.Element, {
         this.res    = this.layer.app.settings.get('resources');
         this.stats  = this.settings.get('stats');
 
+        this.count = 3;
+
         this.colors = [];
         for (i = 1; i <= 4; i++) {
             this.colors.push(this.res.colors.popRandom());
@@ -245,13 +247,6 @@ atom.declare('Game', App.Element, {
 
                 this.stats.clickValue.current++;
                 this.stats.clickValue.redraw();
-
-                if (this.stats.maximum < this.stats.scoreValue.value) {
-                    this.stats.maxValue.value = this.stats.scoreValue.value;
-                    this.stats.maxValue.increment();
-
-                    atom.cookie.set('sgm.balls.max', this.stats.scoreValue.value);
-                }
             }
         }
     },
@@ -278,6 +273,14 @@ atom.declare('Game', App.Element, {
     },
 
     gameOver: function() {
+        var maximum = atom.cookie.get('sgm.balls.max');
+
+        maximum = maximum ? parseInt(maximum, 10) : 0;
+
+        if (maximum < this.stats.scoreValue.value) {
+            atom.cookie.set('sgm.balls.max', this.stats.scoreValue.value);
+        }
+
         alert('GAME OVER!!!');
     },
 
