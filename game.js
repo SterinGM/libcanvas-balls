@@ -257,7 +257,6 @@ atom.declare('Game', App.Element, {
 
                 if (this.stats.scoreValue.value > next) {
                     this.level = Math.ceil(this.stats.scoreValue.value / this.score);
-                    atom.trace(this.level);
 
                     this.stats.levelValue.current = this.level;
                     this.stats.levelValue.redraw();
@@ -269,7 +268,9 @@ atom.declare('Game', App.Element, {
     },
 
     getScore: function(count) {
-        return Math.round(4 * Math.pow(count, 1.5));
+        var factor = this.level + 3;
+
+        return Math.round(factor * Math.pow(count, 1.5));
     },
 
     isFinish: function() {
