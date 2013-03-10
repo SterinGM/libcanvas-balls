@@ -78,7 +78,7 @@ atom.declare('Balls.Controller', {
         });
 
         this.title = new Title(this.layer, {
-            shape:  new Rectangle(0, 0, width, height),
+            shape:  new Rectangle(10, 0, size.x, height),
             zIndex: 50
         });
 
