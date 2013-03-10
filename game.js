@@ -268,7 +268,7 @@ atom.declare('Game', App.Element, {
     },
 
     getScore: function(count) {
-        var factor = this.level + 3;
+        var factor = this.level * 2;
 
         return Math.round(factor * Math.pow(count, 1.5));
     },
