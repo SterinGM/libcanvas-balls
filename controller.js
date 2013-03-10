@@ -77,12 +77,18 @@ atom.declare('Balls.Controller', {
             zIndex: 30
         });
 
+        this.title = new Title(this.layer, {
+            shape:  new Rectangle(0, 0, width, height),
+            zIndex: 50
+        });
+
         this.game = new Game(this.layer, {
             size:   this.settings.get('size'),
             tile:   this.settings.get('tile'),
             shape:  this.field.shape,
             stats:  this.stats,
             back:   this.back,
+            title:  this.title,
             zIndex: 40
         });
     },

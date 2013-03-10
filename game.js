@@ -5,6 +5,7 @@ atom.declare('Game', App.Element, {
         this.res   = this.layer.app.settings.get('resources');
         this.stats = this.settings.get('stats');
         this.back  = this.settings.get('back');
+        this.title = this.settings.get('title');
 
         this.level  = 1;
         this.score  = 1000;
@@ -20,6 +21,8 @@ atom.declare('Game', App.Element, {
 
     updateLevel: function() {
         this.back.update(this.level === 1 ? 1 : 0);
+
+        this.title.show('Level ' + this.level);
 
         var start = 3;
         var count = this.level + start - this.colors.length - 1;
@@ -57,6 +60,8 @@ atom.declare('Game', App.Element, {
                 first.fall();
             }
         }
+
+        this.title.show('Go!!!');
     },
 
     createBall: function(layer, position, delta) {
@@ -302,7 +307,7 @@ atom.declare('Game', App.Element, {
             atom.cookie.set('sgm.balls.max', this.stats.scoreValue.value);
         }
 
-        alert('GAME OVER!!!');
+        this.title.show('Game over!!!', true);
     },
 
     dropBalls: function(position) {
