@@ -3,23 +3,27 @@ atom.declare('Balls.Controller', {
         this.settings = new atom.Settings(settings);
 
         this.colors = [
-//            'white',
-//            'silver',
-//            'gray',
-//            'black',
+            'white',
+            'silver',
+            'gray',
+            'black',
             'red',
-//            'maroon',
+            'maroon',
             'yellow',
-//            'olive',
-//            'lime',
+            'olive',
+            'lime',
             'green',
-//            'aqua',
-//            'teal',
+            'aqua',
+            'teal',
             'blue',
-//            'navy',
-//            'fuchsia',
-//            'purple',
-//            'orange'
+            'navy',
+            'fuchsia',
+            'purple',
+            'orange'
+        ];
+
+        this.backs = [
+            'back1', 'back2'
         ];
 
         atom.ImagePreloader.run({
@@ -69,7 +73,7 @@ atom.declare('Balls.Controller', {
         this.layer = app.createLayer({intersection: 'all'});
 
         this.back = new Back(this.layer, {
-            image:  this.images.get('back2'),
+            image:  this.images.get(this.backs.popRandom()),
             zIndex: 10
         });
 

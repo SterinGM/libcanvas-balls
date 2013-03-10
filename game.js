@@ -4,7 +4,11 @@ atom.declare('Game', App.Element, {
 
         this.res    = this.layer.app.settings.get('resources');
         this.stats  = this.settings.get('stats');
-        this.colors = this.res.colors;
+
+        this.colors = [];
+        for (i = 1; i <= 4; i++) {
+            this.colors.push(this.res.colors.popRandom());
+        }
 
         this.mouseHandler = new App.MouseHandler({mouse: new Mouse(this.layer.app.container.bounds), app: this.layer.app});
 
