@@ -194,7 +194,7 @@ atom.declare('Game', App.Element, {
             ball.info.hide();
         }
 
-        if (selection) {
+        if (selection && selection.count > 1) {
             selection.balls.forEach(function(arr) {
                 arr.forEach(function(ball) {
                     ball.hover = hover;

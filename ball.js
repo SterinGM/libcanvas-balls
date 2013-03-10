@@ -111,62 +111,50 @@ atom.declare('Balls.Ball', App.Element, {
     },
 
     renderTo: function(ctx) {
-        var image = this.hover && !this.animated ? this.color + '_hover' : this.color;
+        if (this.hover && !this.animated)
+        {
+            ctx.drawImage({
+                image:    this.res.images.get('glow'),
+                draw :    this.shape,
+                optimize: true
+            });
+        }
 
         ctx.set({opacity: 1}).drawImage({
-            image:    this.res.images.get(image),
+            image:    this.res.images.get(this.color),
             draw :    this.shape,
             optimize: true
         });
     },
 
     hide: function(count) {
-        if (this.animated) {
+        if (this.animated || count <= 1) {
             return;
         }
 
         this.animated = true;
 
-        var scale = Math.ceil(this.shape.width / 15);
+        var scale = Math.ceil(this.shape.width / 2);
 
         this.animate({
-            time: 50,
-            fn : 'sine-out',
+            time: 300,
+            fn : 'back-in',
             onTick: this.redraw,
             props: {
-                'shape.from.x' : this.shape.from.x - scale,
-                'shape.from.y' : this.shape.from.y - scale,
-                'shape.to.x'   : this.shape.to.x + scale,
-                'shape.to.y'   : this.shape.to.y + scale
+                'shape.from.x' : this.shape.from.x + scale,
+                'shape.from.y' : this.shape.from.y + scale,
+                'shape.to.x'   : this.shape.to.x - scale,
+                'shape.to.y'   : this.shape.to.y - scale
             },
             onComplete: function () {
-                if (count > 1) {
-                    scale = Math.ceil(this.shape.width / 2);
+                this.animated = false;
+
+                this.game.balls[this.position.y][this.position.x] = null;
+                this.game.hidden++;
+
+                if (this.game.hidden === count) {
+                    this.game.dropBalls(this.position);
                 }
-
-                this.animate({
-                    fn: 'sine-in',
-                    time  : count > 1 ? 200 : 50,
-                    onTick: this.redraw,
-                    props: {
-                        'shape.from.x' : this.shape.from.x + scale,
-                        'shape.from.y' : this.shape.from.y + scale,
-                        'shape.to.x'   : this.shape.to.x - scale,
-                        'shape.to.y'   : this.shape.to.y - scale
-                    },
-                    onComplete: function () {
-                        this.animated = false;
-
-                        if (count > 1) {
-                            this.game.balls[this.position.y][this.position.x] = null;
-                            this.game.hidden++;
-
-                            if (this.game.hidden === count) {
-                                this.game.dropBalls(this.position);
-                            }
-                        }
-                    }.bind(this)
-                });
             }.bind(this)
         });
     }

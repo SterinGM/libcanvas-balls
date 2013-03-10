@@ -13,6 +13,8 @@ atom.declare('Balls.Controller', {
             back1:   'sky.jpg',
             back2:   'colorful.jpg',
 
+            glow:   'glow.png',
+
             red:    'balls.png [15:165:120:120]',
             yellow: 'balls.png [15:315:120:120]',
             blue:   'balls.png [15:615:120:120]',
