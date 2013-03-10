@@ -84,11 +84,7 @@ atom.declare('Balls.Ball', App.Element, {
 
                 this.animated = false;
 
-                if (typeof(this.game.balls[this.position.y + 1]) !== 'undefined') {
-                    var ball = this.game.balls[this.position.y + 1][this.position.x];
-
-                    ball.fall();
-                }
+                this.fall();
             }.bind(this)
         });
 
