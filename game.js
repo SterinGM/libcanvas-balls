@@ -5,25 +5,28 @@ atom.declare('Game', App.Element, {
         this.res    = this.layer.app.settings.get('resources');
         this.stats  = this.settings.get('stats');
 
-        this.count = 3;
-        this.level = 1;
-        this.score = 1000;
+        this.level  = 1;
+        this.score  = 1000;
+        this.colors = [];
+
+        this.mouseHandler = new App.MouseHandler({mouse: new Mouse(this.layer.app.container.bounds), app: this.layer.app});
+
+        this.updateLevel();
+        this.generate();
+        this.calculation();
+        this.redraw();
+    },
+
+    updateLevel: function() {
+        var start = 3;
+        var count = this.level + start - this.colors.length - 1;
 
         this.stats.levelValue.current = this.level;
         this.stats.levelValue.redraw();
 
-        this.colors = [];
-        for (i = 1; i <= this.count; i++) {
+        for (var i = 1; i <= count; i++) {
             this.colors.push(this.res.colors.popRandom());
         }
-
-        this.mouseHandler = new App.MouseHandler({mouse: new Mouse(this.layer.app.container.bounds), app: this.layer.app});
-
-        this.generate();
-
-        this.calculation();
-
-        this.redraw();
     },
 
     generate: function() {
@@ -258,10 +261,7 @@ atom.declare('Game', App.Element, {
                 if (this.stats.scoreValue.value > next) {
                     this.level = Math.ceil(this.stats.scoreValue.value / this.score);
 
-                    this.stats.levelValue.current = this.level;
-                    this.stats.levelValue.redraw();
-
-                    this.colors.push(this.res.colors.popRandom());
+                    this.updateLevel();
                 }
             }
         }
