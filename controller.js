@@ -3,7 +3,7 @@ atom.declare('Balls.Controller', {
         this.settings = new atom.Settings(settings);
 
         this.colors = 'white silver gray black red maroon yellow olive lime green aqua teal blue navy fuchsia purple orange';
-        this.backs  = 'back_sky back_colorful back_1 back_2 back_3 back_4 back_5';
+        this.backs  = 'back_sky back_colorful back_1 back_2 back_3 back_4 back_5 a1 Green5 hd2';
 
         atom.ImagePreloader.run({
             back_1:        'backgrounds/1.jpg',
@@ -13,6 +13,9 @@ atom.declare('Balls.Controller', {
             back_5:        'backgrounds/5.jpg',
             back_sky:      'backgrounds/sky.jpg',
             back_colorful: 'backgrounds/colorful.jpg',
+            Green5:        'backgrounds/Green-Abstract-Wallpapers-5.jpg',
+            hd2:           'backgrounds/hd-abstract-wallpapers-2.jpg',
+            a1:            'backgrounds/a1.jpg',
 
             glow: 'glow.png',
 
