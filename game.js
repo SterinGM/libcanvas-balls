@@ -2,8 +2,9 @@ atom.declare('Game', App.Element, {
     configure: function() {
         this.bindMethods(['isValidPoint']);
 
-        this.res    = this.layer.app.settings.get('resources');
-        this.stats  = this.settings.get('stats');
+        this.res   = this.layer.app.settings.get('resources');
+        this.stats = this.settings.get('stats');
+        this.back  = this.settings.get('back');
 
         this.level  = 1;
         this.score  = 1000;
@@ -18,6 +19,8 @@ atom.declare('Game', App.Element, {
     },
 
     updateLevel: function() {
+        this.back.update(this.level === 1 ? 1 : 0);
+
         var start = 3;
         var count = this.level + start - this.colors.length - 1;
 

@@ -50,6 +50,7 @@ atom.declare('Balls.Controller', {
             simple: true,
             resources: {
                 colors: this.colors.split(' '),
+                backs:  this.backs.split(' '),
                 images: this.images
             }
         });
@@ -57,7 +58,6 @@ atom.declare('Balls.Controller', {
         this.layer = app.createLayer({intersection: 'all'});
 
         this.back = new Back(this.layer, {
-            image:  this.images.get(this.backs.split(' ').popRandom()),
             zIndex: 10
         });
 
@@ -79,6 +79,7 @@ atom.declare('Balls.Controller', {
             tile:   this.settings.get('tile'),
             shape:  this.field.shape,
             stats:  this.stats,
+            back:   this.back,
             zIndex: 40
         });
     },
