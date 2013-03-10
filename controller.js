@@ -2,29 +2,8 @@ atom.declare('Balls.Controller', {
     initialize: function(settings) {
         this.settings = new atom.Settings(settings);
 
-        this.colors = [
-            'white',
-            'silver',
-            'gray',
-            'black',
-            'red',
-            'maroon',
-            'yellow',
-            'olive',
-            'lime',
-            'green',
-            'aqua',
-            'teal',
-            'blue',
-            'navy',
-            'fuchsia',
-            'purple',
-            'orange'
-        ];
-
-        this.backs = [
-            'back_sky', 'back_colorful', 'back_1', 'back_2', 'back_3', 'back_4', 'back_5'
-        ];
+        this.colors = 'white silver gray black red maroon yellow olive lime green aqua teal blue navy fuchsia purple orange';
+        this.backs  = 'back_sky back_colorful back_1 back_2 back_3 back_4 back_5';
 
         atom.ImagePreloader.run({
             back_1:        'backgrounds/1.jpg',
@@ -35,7 +14,7 @@ atom.declare('Balls.Controller', {
             back_sky:      'backgrounds/sky.jpg',
             back_colorful: 'backgrounds/colorful.jpg',
 
-            glow:   'glow.png',
+            glow: 'glow.png',
 
             white:  'balls.png [100:100]{0:0}',
             silver: 'balls.png [100:100]{0:1}',
@@ -70,7 +49,7 @@ atom.declare('Balls.Controller', {
             size:   new Size(width, height),
             simple: true,
             resources: {
-                colors: this.colors,
+                colors: this.colors.split(' '),
                 images: this.images
             }
         });
@@ -78,7 +57,7 @@ atom.declare('Balls.Controller', {
         this.layer = app.createLayer({intersection: 'all'});
 
         this.back = new Back(this.layer, {
-            image:  this.images.get(this.backs.popRandom()),
+            image:  this.images.get(this.backs.split(' ').popRandom()),
             zIndex: 10
         });
 
