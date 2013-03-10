@@ -19,7 +19,7 @@ atom.declare('Title', App.Element, {
         var title    = this;
 
         this.animate({
-            fn: 'bounce-out',
+            fn: 'elastic-out',
 			props: {
 				opacity:  1,
                 fontSize: this.size
@@ -31,7 +31,7 @@ atom.declare('Title', App.Element, {
                 } else {
                     setTimeout(function () {
                         title.animate({
-                            fn: 'bounce-in',
+                            time: 200,
                             props: {
                                 opacity:  0,
                                 fontSize: 0
