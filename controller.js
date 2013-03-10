@@ -23,12 +23,17 @@ atom.declare('Balls.Controller', {
         ];
 
         this.backs = [
-            'back1', 'back2'
+            'back_sky', 'back_colorful', 'back_1', 'back_2', 'back_3', 'back_4', 'back_5'
         ];
 
         atom.ImagePreloader.run({
-            back1:   'sky.jpg',
-            back2:   'colorful.jpg',
+            back_1:        'backgrounds/1.jpg',
+            back_2:        'backgrounds/2.jpg',
+            back_3:        'backgrounds/3.jpg',
+            back_4:        'backgrounds/4.jpg',
+            back_5:        'backgrounds/5.jpg',
+            back_sky:      'backgrounds/sky.jpg',
+            back_colorful: 'backgrounds/colorful.jpg',
 
             glow:   'glow.png',
 
