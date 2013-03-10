@@ -3,10 +3,23 @@ atom.declare('Balls.Controller', {
         this.settings = new atom.Settings(settings);
 
         this.colors = [
+//            'white',
+//            'silver',
+//            'gray',
+//            'black',
             'red',
+//            'maroon',
+            'yellow',
+//            'olive',
+//            'lime',
             'green',
+//            'aqua',
+//            'teal',
             'blue',
-            'yellow'
+//            'navy',
+//            'fuchsia',
+//            'purple',
+//            'orange'
         ];
 
         atom.ImagePreloader.run({
@@ -15,15 +28,23 @@ atom.declare('Balls.Controller', {
 
             glow:   'glow.png',
 
-            red:    'balls.png [15:165:120:120]',
-            yellow: 'balls.png [15:315:120:120]',
-            blue:   'balls.png [15:615:120:120]',
-            green:  'balls.png [15:915:120:120]',
-
-            red_hover:    'balls.png [170:170:110:110]',
-            yellow_hover: 'balls.png [170:320:110:110]',
-            blue_hover:   'balls.png [170:620:110:110]',
-            green_hover:  'balls.png [170:920:110:110]'
+            white:  'balls.png [100:100]{0:0}',
+            silver: 'balls.png [100:100]{0:1}',
+            gray:   'balls.png [100:100]{0:2}',
+            black:  'balls.png [100:100]{0:3}',
+            red:    'balls.png [100:100]{0:4}',
+            maroon: 'balls.png [100:100]{0:5}',
+            yellow: 'balls.png [100:100]{0:6}',
+            olive:  'balls.png [100:100]{0:7}',
+            lime:   'balls.png [100:100]{0:8}',
+            green:  'balls.png [100:100]{0:9}',
+            aqua:   'balls.png [100:100]{0:10}',
+            teal:   'balls.png [100:100]{0:11}',
+            blue:   'balls.png [100:100]{0:12}',
+            navy:   'balls.png [100:100]{0:13}',
+            fuchsia:'balls.png [100:100]{0:14}',
+            purple: 'balls.png [100:100]{0:15}',
+            orange: 'balls.png [100:100]{0:16}'
         }, this.start.bind(this));
     },
 

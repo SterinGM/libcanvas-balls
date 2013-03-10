@@ -123,6 +123,7 @@ atom.declare('Balls.Ball', App.Element, {
         ctx.set({opacity: 1}).drawImage({
             image:    this.res.images.get(this.color),
             draw :    this.shape,
+            scale:    [0.85, 0.85],
             optimize: true
         });
     },
