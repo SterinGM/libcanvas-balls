@@ -6,9 +6,14 @@ atom.declare('Game', App.Element, {
         this.stats  = this.settings.get('stats');
 
         this.count = 3;
+        this.level = 1;
+        this.score = 1000;
+
+        this.stats.levelValue.current = this.level;
+        this.stats.levelValue.redraw();
 
         this.colors = [];
-        for (i = 1; i <= 4; i++) {
+        for (i = 1; i <= this.count; i++) {
             this.colors.push(this.res.colors.popRandom());
         }
 
@@ -247,6 +252,18 @@ atom.declare('Game', App.Element, {
 
                 this.stats.clickValue.current++;
                 this.stats.clickValue.redraw();
+
+                var next = this.score * this.level;
+
+                if (this.stats.scoreValue.value > next) {
+                    this.level = Math.ceil(this.stats.scoreValue.value / this.score);
+                    atom.trace(this.level);
+
+                    this.stats.levelValue.current = this.level;
+                    this.stats.levelValue.redraw();
+
+                    this.colors.push(this.res.colors.popRandom());
+                }
             }
         }
     },

@@ -14,9 +14,6 @@ atom.declare('Stats', App.Element, {
         this.scoreValue = new Increment(this.layer, {shape: this.score, zIndex: this.zIndex + 1, color: 'green'});
         this.clickValue = new Increment(this.layer, {shape: this.click, zIndex: this.zIndex + 1, color: 'yellow'});
         this.levelValue = new Increment(this.layer, {shape: this.level, zIndex: this.zIndex + 1, color: 'red'});
-
-        this.levelValue.current = 1;
-        this.levelValue.redraw();
     },
 
     renderTo: function (ctx) {
