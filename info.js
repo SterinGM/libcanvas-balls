@@ -10,7 +10,7 @@ atom.declare('Balls.Info', App.Element, {
         this.width  = 70;
         this.height = 25;
         this.text   = '';
-        this.size   = this.layer.app.settings.get('size');
+        this.size   = this.layer.settings.get('size');
         this.shape  = new RoundedRectangle(0, 0, this.width, this.height).setRadius(5);
     },
 
