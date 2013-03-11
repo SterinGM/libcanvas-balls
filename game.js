@@ -21,9 +21,11 @@ atom.declare('Game', App.Element, {
     },
 
     updateLevel: function() {
-        var count = this.level ? 1 : 3;;
+        var count = this.level ? 1 : 3;
 
-        this.back.update(this.level ? 0 : 1);
+        if (this.level) {
+            this.back.update();
+        }
 
         this.next += this.level * this.score;
 

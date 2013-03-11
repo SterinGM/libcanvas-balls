@@ -8,10 +8,19 @@ atom.declare('Back', App.Element, {
         this.size  = this.layer.app.settings.get('size');
         this.shape = new Rectangle(0, 0, this.size.x, this.size.y);
 
-        this.opacity = 0;
+        this.opacity   = 1;
+        this.image     = null;
+        this.old       = null;
+        this.imageCrop = null;
+        this.oldCrop   = null;
+
+        this.getImage();
+        this.redraw();
     },
 
-    crop: function() {
+    getImage: function() {
+        this.image = this.res.images.get(this.res.backs.clone().popRandom());
+
         var width_factor  = this.size.x / this.image.width;
         var height_factor = this.size.y / this.image.height;
 
@@ -23,36 +32,42 @@ atom.declare('Back', App.Element, {
         var left = Math.round((new_width - this.size.x) / 2 / scale);
         var top  = Math.round((new_height - this.size.y) / 2 / scale);
 
-        this.from = new Point(left, top);
-        this.to   = new Point(this.image.width - left, this.image.height - top);
+        this.imageCrop = [new Point(left, top), new Point(this.image.width - left, this.image.height - top)];
     },
 
-    update: function (alpha) {
-        if (alpha) {
-            this.image = this.res.images.get(this.res.backs.clone().popRandom());
+    update: function () {
+        this.old     = this.image;
+        this.oldCrop = this.imageCrop;
 
-            this.crop();
-        }
+        this.getImage();
+
+        this.opacity = 0;
 
         var opacity = this.opacity;
 
         this.animate({
+            time: 1000,
             props: {
-                opacity: alpha ? alpha : 0
+                opacity: 1
             },
             onTick: this.redraw,
-            onComplete: function() {
-                if (!alpha) {
-                    this.update(1);
-                }
-            }.bind(this)
+            onComplete: this.redraw
         });
     },
 
 	renderTo: function (ctx) {
+        if (this.old) {
+            ctx.set({opacity: 1}).drawImage({
+                image:    this.old,
+                crop :    this.oldCrop,
+                draw :    this.shape,
+                optimize: true
+            });
+        }
+
 		ctx.set({opacity: this.opacity}).drawImage({
             image:    this.image,
-            crop :    [this.from, this.to],
+            crop :    this.imageCrop,
             draw :    this.shape,
             optimize: true
         }).set({opacity: 1});
