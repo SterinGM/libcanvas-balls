@@ -57,7 +57,7 @@ atom.declare('Game', App.Element, {
     },
 
     updateLevel: function() {
-        var count = this.level ? 1 : 5;
+        var count = this.level ? 1 : 3;
 
         if (this.level) {
             this.back.update();
