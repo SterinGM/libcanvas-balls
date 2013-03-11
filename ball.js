@@ -124,11 +124,7 @@ atom.declare('Balls.Ball', App.Element, {
         });
     },
 
-    hide: function(count) {
-        if (this.animated || count <= 1) {
-            return;
-        }
-
+    hide: function(last) {
         this.animated = true;
 
         var scale = Math.ceil(this.shape.width / 2);
@@ -147,10 +143,11 @@ atom.declare('Balls.Ball', App.Element, {
                 this.animated = false;
 
                 this.game.balls[this.position.y][this.position.x] = null;
-                this.game.hidden++;
 
-                if (this.game.hidden === count) {
-                    this.game.dropBalls(this.position);
+                var ball = this;
+
+                if (ball === last) {
+                    this.game.dropBalls(ball);
                 }
             }.bind(this)
         });

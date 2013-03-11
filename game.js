@@ -57,7 +57,7 @@ atom.declare('Game', App.Element, {
     },
 
     updateLevel: function() {
-        var count = this.level ? 1 : 3;
+        var count = this.level ? 1 : 5;
 
         if (this.level) {
             this.back.update();
@@ -254,30 +254,31 @@ atom.declare('Game', App.Element, {
 
     click: function(cball) {
         this.animated = false;
-        this.hidden   = 0;
 
         var selection = this.getSelect(cball);
 
-        if (!selection.balls){
+        if (!selection.balls || selection.count <= 1) {
             return;
         }
 
+        var last = null;
+
         selection.balls.forEach(function(arr) {
             arr.forEach(function(ball) {
+                last = ball;
+
                 this.animated = this.animated || ball.animated;
             }.bind(this));
         }.bind(this));
 
-        if (this.animated) {
-            cball.hide(0);
-        } else {
+        if (!this.animated) {
             cball.info.hide();
 
             this.select[cball.position.y][cball.position.x].clicked = true;
 
             selection.balls.forEach(function(arr) {
                 arr.forEach(function(ball) {
-                    ball.hide(selection.count);
+                    ball.hide(last);
                 }.bind(this));
             }.bind(this));
 
@@ -336,10 +337,10 @@ atom.declare('Game', App.Element, {
         this.title.show('Game over!!!', true);
     },
 
-    dropBalls: function(position) {
+    dropBalls: function(cball) {
         var size = this.settings.get('size');
         var y, empty, key, ball, delta, first;
-        var selection = this.select[position.y][position.x];
+        var selection = this.getSelect(cball);
 
         selection.balls.forEach(function(arr, x) {
             key   = 0;
