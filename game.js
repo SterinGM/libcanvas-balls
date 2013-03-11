@@ -7,7 +7,7 @@ atom.declare('Game', App.Element, {
         this.back  = this.settings.get('back');
         this.title = this.settings.get('title');
 
-        this.level  = 1;
+        this.level  = 0;
         this.score  = 1000;
         this.colors = [];
 
@@ -20,12 +20,13 @@ atom.declare('Game', App.Element, {
     },
 
     updateLevel: function() {
-        this.back.update(this.level === 1 ? 1 : 0);
+        var count = this.level ? 1 : 3;;
+
+        this.back.update(this.level ? 0 : 1);
+
+        this.level++;
 
         this.title.show('Level ' + this.level);
-
-        var start = 3;
-        var count = this.level + start - this.colors.length - 1;
 
         this.stats.levelValue.current = this.level;
         this.stats.levelValue.redraw();
@@ -267,8 +268,6 @@ atom.declare('Game', App.Element, {
                 var next = this.score * this.level;
 
                 if (this.stats.scoreValue.value > next) {
-                    this.level = Math.ceil(this.stats.scoreValue.value / this.score);
-
                     this.updateLevel();
                 }
             }
