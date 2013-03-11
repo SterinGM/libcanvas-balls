@@ -9,6 +9,7 @@ atom.declare('Game', App.Element, {
 
         this.level  = 0;
         this.score  = 1000;
+        this.next   = 1000;
         this.colors = [];
 
         this.mouseHandler = new App.MouseHandler({mouse: new Mouse(this.layer.app.container.bounds), app: this.layer.app});
@@ -23,6 +24,8 @@ atom.declare('Game', App.Element, {
         var count = this.level ? 1 : 3;;
 
         this.back.update(this.level ? 0 : 1);
+
+        this.next += this.level * this.score;
 
         this.level++;
 
@@ -265,9 +268,7 @@ atom.declare('Game', App.Element, {
                 this.stats.clickValue.current++;
                 this.stats.clickValue.redraw();
 
-                var next = this.score * this.level;
-
-                if (this.stats.scoreValue.value > next) {
+                if (this.stats.scoreValue.value > this.next) {
                     this.updateLevel();
                 }
             }
