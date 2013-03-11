@@ -258,6 +258,10 @@ atom.declare('Game', App.Element, {
 
         var selection = this.getSelect(cball);
 
+        if (!selection.balls){
+            return;
+        }
+
         selection.balls.forEach(function(arr) {
             arr.forEach(function(ball) {
                 this.animated = this.animated || ball.animated;
@@ -360,7 +364,7 @@ atom.declare('Game', App.Element, {
                             first = ball;
                         }
 
-                        this.balls[y][x] = null;
+                        this.balls[y][x]   = null;
                         this.balls[key][x] = ball;
 
                         key--;
@@ -368,26 +372,28 @@ atom.declare('Game', App.Element, {
                 }
             }
 
-            y = delta;
-
             arr.forEach(function(ball) {
-                y--;
+                for (var j = size.y - 1; j >= 0; j--) {
+                    if (!this.balls[j][x]) {
+                        ball.shape.from = this.translatePoint(new Point(x, j - delta - 1));
+                        ball.shape.to   = this.translatePoint(new Point(x + 1, j - delta));
 
-                ball.shape.from = this.translatePoint(new Point(x, y - delta - 1));
-                ball.shape.to   = this.translatePoint(new Point(x + 1, y - delta));
+                        ball.hover    = false;
+                        ball.position = new Point(x, j);
+                        ball.from     = new Point(x, j - delta - 1);
+                        ball.color    = this.colors.clone().popRandom();
 
-                ball.hover    = false;
-                ball.position = new Point(x, y);
-                ball.from     = new Point(x, y - delta - 1);
-                ball.color    = this.colors.clone().popRandom();
+                        this.balls[j][x] = ball;
 
-                this.balls[y][x] = ball;
+                        if (first === null) {
+                            first = ball;
+                        }
 
-                if (first === null) {
-                    first = ball;
+                        this.balls[j][x] = ball;
+
+                        break;
+                    }
                 }
-
-                this.balls[y][x] = ball;
             }.bind(this));
 
             if (first) {
