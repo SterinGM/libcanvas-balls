@@ -21,6 +21,39 @@ atom.declare('Game', App.Element, {
         this.updateLevel();
         this.generate();
         this.calculation();
+        this.subscribe();
+    },
+
+    subscribe: function() {
+        this.balls.forEach(function(arr) {
+            arr.forEach(function(ball) {
+                this.mouseHandler.subscribe(ball);
+
+                ball.events.add('mousedown', function (e) {
+                    e.preventDefault();
+
+                    this.click(ball);
+                }.bind(this));
+
+                ball.events.add('mousemove', function (e) {
+                    e.preventDefault();
+
+                    this.info(ball);
+                }.bind(this));
+
+                ball.events.add('mouseover', function (e) {
+                    e.preventDefault();
+
+                    this.glow(ball, true);
+                }.bind(this));
+
+                ball.events.add('mouseout', function (e) {
+                    e.preventDefault();
+
+                    this.glow(ball);
+                }.bind(this));
+            }.bind(this));
+        }.bind(this));
     },
 
     updateLevel: function() {
@@ -85,32 +118,6 @@ atom.declare('Game', App.Element, {
             game:       this,
             zIndex:     this.zIndex + 5
         });
-
-        this.mouseHandler.subscribe(ball);
-
-        ball.events.add('mousedown', function (e) {
-            e.preventDefault();
-
-            this.click(ball);
-        }.bind(this));
-
-        ball.events.add('mousemove', function (e) {
-            e.preventDefault();
-
-            this.info(ball);
-        }.bind(this));
-
-        ball.events.add('mouseover', function (e) {
-            e.preventDefault();
-
-            this.glow(ball, true);
-        }.bind(this));
-
-        ball.events.add('mouseout', function (e) {
-            e.preventDefault();
-
-            this.glow(ball);
-        }.bind(this));
 
         return ball;
     },
