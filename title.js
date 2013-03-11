@@ -19,7 +19,8 @@ atom.declare('Title', App.Element, {
         var title    = this;
 
         this.animate({
-            fn: 'elastic-out',
+            time: 200,
+            fn: 'back-out',
 			props: {
 				opacity:  1,
                 fontSize: this.size
@@ -39,7 +40,7 @@ atom.declare('Title', App.Element, {
                             onTick: title.redraw,
                             onComplete: title.redraw
                         });
-                    }, 500);
+                    }, 1000);
                 }
             }.bind(this)
 		});
