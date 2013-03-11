@@ -22,7 +22,7 @@ atom.declare('Title', App.Element, {
         var title    = this;
 
         this.animate({
-            time: 200,
+            time: 300,
             fn: 'back-out',
 			props: {
 				opacity:  1,

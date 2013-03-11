@@ -2,7 +2,8 @@ atom.declare('Game', App.Element, {
     configure: function() {
         this.bindMethods(['isValidPoint']);
 
-        this.res   = this.layer.app.settings.get('resources');
+        this.res = this.layer.app.settings.get('resources');
+
         this.stats = this.settings.get('stats');
         this.back  = this.settings.get('back');
         this.title = this.settings.get('title');
@@ -10,14 +11,16 @@ atom.declare('Game', App.Element, {
         this.level  = 0;
         this.score  = 1000;
         this.next   = 1000;
+
         this.colors = [];
+        this.select = [];
+        this.balls  = [];
 
         this.mouseHandler = new App.MouseHandler({mouse: new Mouse(this.layer.app.container.bounds), app: this.layer.app});
 
         this.updateLevel();
         this.generate();
         this.calculation();
-        this.redraw();
     },
 
     updateLevel: function() {
@@ -45,7 +48,7 @@ atom.declare('Game', App.Element, {
         var y, x, position, first, ball;
         var size = this.settings.get('size');
 
-        this.balls  = atom.array.fillMatrix(size.x, size.y, null);
+        this.balls = atom.array.fillMatrix(size.x, size.y, null);
 
         for (x = 0; x < size.x; x++) {
             first = null;
@@ -201,8 +204,18 @@ atom.declare('Game', App.Element, {
         return neighbours.filter(this.isValidPoint);
     },
 
+    getSelect: function(ball) {
+        if (typeof(this.select[ball.position.y]) !== 'undefined') {
+            if (typeof(this.select[ball.position.y][ball.position.x]) !== 'undefined') {
+                return this.select[ball.position.y][ball.position.x];
+            }
+        };
+
+        return new Array();
+    },
+
     info: function(ball) {
-        var selection = this.select[ball.position.y][ball.position.x];
+        var selection = this.getSelect(ball);
 
         if (selection && selection.count > 1 && !selection.clicked) {
             var points = this.getScore(selection.count);
@@ -216,7 +229,7 @@ atom.declare('Game', App.Element, {
     },
 
     glow: function(ball, hover) {
-        var selection = this.select[ball.position.y][ball.position.x];
+        var selection = this.getSelect(ball);
 
         if (!hover) {
             ball.info.hide();
@@ -236,7 +249,7 @@ atom.declare('Game', App.Element, {
         this.animated = false;
         this.hidden   = 0;
 
-        var selection = this.select[cball.position.y][cball.position.x];
+        var selection = this.getSelect(cball);
 
         selection.balls.forEach(function(arr) {
             arr.forEach(function(ball) {
