@@ -1,9 +1,9 @@
 body {
     background-image: url(back.png);
-    text-align: center;
 }
 
-canvas {
+div.libcanvas-app {
+    margin: 0px auto;
     border: 2px solid black;
 }
 

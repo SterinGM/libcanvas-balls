@@ -40,7 +40,7 @@ atom.declare('Balls.Controller', {
     },
 
     start: function (images) {
-        var app, layer;
+        var app, layerMain;
 
         this.images = images;
 
@@ -49,8 +49,7 @@ atom.declare('Balls.Controller', {
         var height = size.y + 20;
 
         app = new App({
-            size:   new Size(width, height),
-            simple: true,
+            size: new Size(width, height),
             resources: {
                 colors: this.colors.split(' '),
                 backs:  this.backs.split(' '),
@@ -58,38 +57,43 @@ atom.declare('Balls.Controller', {
             }
         });
 
-        this.layer = app.createLayer({intersection: 'all'});
+        this.layerMain = app.createLayer({intersection: 'auto', zIndex: 0, name: 'main'});
 
-        this.back = new Back(this.layer, {
-            zIndex: 10
+        this.back = new Back(this.layerMain);
+
+        this.layerScore = app.createLayer({intersection: 'auto', size: new Size(170, 105), zIndex: 10, name: 'score'});
+        this.layerScore.dom.addShift(new Point(size.x + 20, 10));
+
+        this.stats = new Stats(this.layerScore, {
+            from:   new Point(0, 0),
+            to:     new Point(170, 105)
         });
 
-        this.stats = new Stats(this.layer, {
-            from:   new Point(size.x + 20, 10),
-            to:     new Point(size.x + 200 - 10, 115),
-            zIndex: 20
+        this.layerPopup = app.createLayer({intersection: 'manual', size: new Size(size.x, height), zIndex: 30, name: 'popup'});
+        this.layerPopup.dom.addShift(new Point(10, 0));
+
+        this.title = new Title(this.layerPopup, {
+            shape: new Rectangle(10, 0, size.x, height)
         });
 
-        this.field = new Field(this.layer, {
+        this.layerGame = app.createLayer({intersection: 'all', size: new Size(size.x, size.y + 10), zIndex: 20, name: 'game'});
+        this.layerGame.dom.addShift(new Point(10, 0));
+
+        this.field = new Field(this.layerGame, {
             size:   this.settings.get('size'),
             tile:   this.settings.get('tile'),
-            shape:  new Rectangle(10, 10, size.x, size.y),
-            zIndex: 30
+            shape:  new Rectangle(0, 10, size.x, size.y + 10),
+            zIndex: 0
         });
 
-        this.title = new Title(this.layer, {
-            shape:  new Rectangle(10, 0, size.x, height),
-            zIndex: 50
-        });
-
-        this.game = new Game(this.layer, {
+        this.game = new Game(this.layerGame, {
             size:   this.settings.get('size'),
             tile:   this.settings.get('tile'),
             shape:  this.field.shape,
             stats:  this.stats,
             back:   this.back,
             title:  this.title,
-            zIndex: 40
+            zIndex: 10
         });
     },
 
