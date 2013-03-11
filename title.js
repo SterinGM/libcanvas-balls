@@ -4,9 +4,12 @@ atom.declare('Title', App.Element, {
     configure: function () {
         this.animate = new atom.Animatable(this).animate;
 
+        this.size  = this.layer.settings.get('size');
+        this.shape = new Rectangle(0, 0, this.size.x, this.size.y);
+
         this.padding = Math.round(this.shape.height / 3);
 
-        this.size = Math.round(this.shape.height / 10);
+        this.font = Math.round(this.shape.height / 10);
     },
 
     show: function (text, show) {
@@ -23,7 +26,7 @@ atom.declare('Title', App.Element, {
             fn: 'back-out',
 			props: {
 				opacity:  1,
-                fontSize: this.size
+                fontSize: this.font
 			},
 			onTick: this.redraw,
 			onComplete: function() {

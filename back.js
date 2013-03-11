@@ -5,7 +5,7 @@ atom.declare('Back', App.Element, {
         this.animate = new atom.Animatable(this).animate;
 
         this.res   = this.layer.app.settings.get('resources');
-        this.size  = this.layer.app.settings.get('size');
+        this.size  = this.layer.settings.get('size');
         this.shape = new Rectangle(0, 0, this.size.x, this.size.y);
 
         this.opacity   = 1;

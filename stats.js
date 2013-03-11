@@ -2,14 +2,12 @@
 
 atom.declare('Stats', App.Element, {
     configure: function () {
-        var from = this.settings.get('from');
-        var to   = this.settings.get('to');
+        this.size  = this.layer.settings.get('size');
+        this.shape = new Rectangle(0, 0, this.size.x, this.size.y);
 
-        this.shape = new Rectangle(from, to);
-
-        this.score = new Rectangle(new Point(from.x + 10, from.y),      new Point(to.x - 10, from.y + 35));
-        this.click = new Rectangle(new Point(from.x + 10, from.y + 35), new Point(to.x - 10, from.y + 70));
-        this.level = new Rectangle(new Point(from.x + 10, from.y + 70), new Point(to.x - 10, from.y + 105));
+        this.score = new Rectangle(new Point(10, 0),  new Point(this.size.x - 10, 35));
+        this.click = new Rectangle(new Point(10, 35), new Point(this.size.x - 10, 70));
+        this.level = new Rectangle(new Point(10, 70), new Point(this.size.x - 10, 105));
 
         this.scoreValue = new Increment(this.layer, {shape: this.score, zIndex: this.zIndex + 1, color: 'green'});
         this.clickValue = new Increment(this.layer, {shape: this.click, zIndex: this.zIndex + 1, color: 'yellow'});

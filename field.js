@@ -1,5 +1,8 @@
 atom.declare('Field', App.Element, {
     configure: function() {
+        this.size  = this.layer.settings.get('size');
+        this.shape = new Rectangle(this.settings.get('from'), new Point(this.size.x, this.size.y));
+
         var size = this.settings.get('size');
 
         var y, x, position, odd;

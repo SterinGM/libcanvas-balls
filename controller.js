@@ -40,9 +40,7 @@ atom.declare('Balls.Controller', {
     },
 
     start: function (images) {
-        var app, layerMain;
-
-        this.images = images;
+        var app, layerMain, layerScore, layerPopup, layerGame, back, stats, title, field, game;
 
         var size   = this.size();
         var width  = size.x + 200;
@@ -53,46 +51,41 @@ atom.declare('Balls.Controller', {
             resources: {
                 colors: this.colors.split(' '),
                 backs:  this.backs.split(' '),
-                images: this.images
+                images: images
             }
         });
 
-        this.layerMain = app.createLayer({intersection: 'auto', zIndex: 0, name: 'main'});
+        layerMain = app.createLayer({intersection: 'auto', size: new Size(width, height), zIndex: 0, name: 'main'});
 
-        this.back = new Back(this.layerMain);
+        back = new Back(layerMain);
 
-        this.layerScore = app.createLayer({intersection: 'auto', size: new Size(170, 105), zIndex: 10, name: 'score'});
-        this.layerScore.dom.addShift(new Point(size.x + 20, 10));
+        layerScore = app.createLayer({intersection: 'auto', size: new Size(170, 105), zIndex: 10, name: 'score'});
+        layerScore.dom.addShift(new Point(size.x + 20, 10));
 
-        this.stats = new Stats(this.layerScore, {
-            from:   new Point(0, 0),
-            to:     new Point(170, 105)
-        });
+        stats = new Stats(layerScore);
 
-        this.layerPopup = app.createLayer({intersection: 'manual', size: new Size(size.x, height), zIndex: 30, name: 'popup'});
-        this.layerPopup.dom.addShift(new Point(10, 0));
+        layerPopup = app.createLayer({intersection: 'manual', size: new Size(size.x, height), zIndex: 30, name: 'popup'});
+        layerPopup.dom.addShift(new Point(10, 0));
 
-        this.title = new Title(this.layerPopup, {
-            shape: new Rectangle(10, 0, size.x, height)
-        });
+        title = new Title(layerPopup);
 
-        this.layerGame = app.createLayer({intersection: 'all', size: new Size(size.x, size.y + 10), zIndex: 20, name: 'game'});
-        this.layerGame.dom.addShift(new Point(10, 0));
+        layerGame = app.createLayer({intersection: 'all', size: new Size(size.x, size.y + 10), zIndex: 20, name: 'game'});
+        layerGame.dom.addShift(new Point(10, 0));
 
-        this.field = new Field(this.layerGame, {
+        field = new Field(layerGame, {
             size:   this.settings.get('size'),
             tile:   this.settings.get('tile'),
-            shape:  new Rectangle(0, 10, size.x, size.y + 10),
+            from:   new Point(0, 10),
             zIndex: 0
         });
 
-        this.game = new Game(this.layerGame, {
+        game = new Game(layerGame, {
             size:   this.settings.get('size'),
             tile:   this.settings.get('tile'),
-            shape:  this.field.shape,
-            stats:  this.stats,
-            back:   this.back,
-            title:  this.title,
+            shape:  field.shape,
+            stats:  stats,
+            back:   back,
+            title:  title,
             zIndex: 10
         });
     },
