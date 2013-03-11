@@ -19,7 +19,7 @@ atom.declare('Back', App.Element, {
     },
 
     getImage: function() {
-        this.image = this.res.images.get(this.res.backs.clone().popRandom());
+        this.image = this.res.images.get('back_' + this.res.backs.clone().popRandom());
 
         var width_factor  = this.size.x / this.image.width;
         var height_factor = this.size.y / this.image.height;
