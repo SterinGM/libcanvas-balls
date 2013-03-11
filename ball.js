@@ -109,7 +109,7 @@ atom.declare('Balls.Ball', App.Element, {
     renderTo: function(ctx) {
         if (this.hover && !this.animated)
         {
-            ctx.drawImage({
+            ctx.set({opacity: 1}).drawImage({
                 image:    this.res.images.get('glow'),
                 draw :    this.shape,
                 optimize: true
