@@ -16,7 +16,11 @@ atom.declare('Game', App.Element, {
         this.select = [];
         this.balls  = [];
 
-        this.mouseHandler = new App.MouseHandler({mouse: new Mouse(this.layer.app.container.bounds), app: this.layer.app});
+        this.mouseHandler = new App.MouseHandler({
+            mouse:  new Mouse(this.layer.app.container.bounds),
+            app:    this.layer.app,
+            search: new Balls.FastSearch(this.layer.settings.get('shift'))
+        });
 
         this.updateLevel();
         this.generate();
