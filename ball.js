@@ -60,6 +60,7 @@ atom.declare('Balls.Ball', App.Element, {
         }
 
         this.animated = true;
+        this.game.fallBalls++;
 
         this.animate({
             time : Math.round(time * 100),
@@ -83,6 +84,12 @@ atom.declare('Balls.Ball', App.Element, {
                 this.from = this.position;
 
                 this.animated = false;
+
+                this.game.fallBalls--;
+
+                if (this.game.fallBalls === 0) {
+                    this.game.completeFall();
+                }
 
                 this.fall();
             }.bind(this)

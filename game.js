@@ -16,6 +16,9 @@ atom.declare('Game', App.Element, {
         this.select = [];
         this.balls  = [];
 
+        this.start     = true;
+        this.fallBalls = 0;
+
         this.mouseHandler = new App.MouseHandler({
             mouse:  new Mouse(this.layer.app.container.bounds),
             app:    this.layer.app,
@@ -24,8 +27,6 @@ atom.declare('Game', App.Element, {
 
         this.updateLevel();
         this.generate();
-        this.calculation();
-        this.subscribe();
     },
 
     subscribe: function() {
@@ -61,6 +62,8 @@ atom.declare('Game', App.Element, {
     },
 
     updateLevel: function() {
+        this.mouseHandler.unsubscribeAll();
+
         var count = this.level ? 1 : 3;
 
         if (this.level) {
@@ -71,7 +74,7 @@ atom.declare('Game', App.Element, {
 
         this.level++;
 
-        this.title.show('Level ' + this.level);
+        this.start = true;
 
         this.stats.levelValue.current = this.level;
         this.stats.levelValue.redraw();
@@ -106,8 +109,22 @@ atom.declare('Game', App.Element, {
                 first.fall();
             }
         }
+    },
 
-        this.title.show('Go!!!');
+    completeFall: function() {
+        if (this.start) {
+            this.title.show('Level ' + this.level);
+
+            this.start = false;
+
+            this.subscribe();
+        }
+
+        this.calculation();
+
+        if (this.isFinish()) {
+            this.gameOver();
+        }
     },
 
     createBall: function(layer, position, delta) {
@@ -330,6 +347,8 @@ atom.declare('Game', App.Element, {
     },
 
     gameOver: function() {
+        this.mouseHandler.unsubscribeAll();
+
         var maximum = atom.cookie.get('sgm.balls.max');
 
         maximum = maximum ? parseInt(maximum, 10) : 0;
@@ -405,11 +424,5 @@ atom.declare('Game', App.Element, {
                 first.fall();
             }
         }.bind(this));
-
-        this.calculation();
-
-        if (this.isFinish()) {
-            this.gameOver();
-        }
     }
 });
