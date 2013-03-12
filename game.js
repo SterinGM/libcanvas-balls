@@ -27,6 +27,7 @@ atom.declare('Game', App.Element, {
 
         this.updateLevel();
         this.generate();
+        this.subscribe();
     },
 
     subscribe: function() {
@@ -59,10 +60,12 @@ atom.declare('Game', App.Element, {
                 }.bind(this));
             }.bind(this));
         }.bind(this));
+
+        this.mouseHandler.stop();
     },
 
     updateLevel: function() {
-        this.mouseHandler.unsubscribeAll();
+        this.mouseHandler.stop();
 
         var count = this.level ? 1 : 3;
 
@@ -117,14 +120,10 @@ atom.declare('Game', App.Element, {
 
             this.start = false;
 
-            this.subscribe();
+            this.mouseHandler.start();
         }
 
         this.calculation();
-
-        if (this.isFinish()) {
-            this.gameOver();
-        }
     },
 
     createBall: function(layer, position, delta) {
@@ -187,6 +186,10 @@ atom.declare('Game', App.Element, {
                     }.bind(this));
                 }
             }
+        }
+
+        if (this.isFinish()) {
+            this.gameOver();
         }
     },
 
@@ -424,5 +427,7 @@ atom.declare('Game', App.Element, {
                 first.fall();
             }
         }.bind(this));
+
+        this.calculation();
     }
 });
