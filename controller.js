@@ -2,10 +2,22 @@ atom.declare('Balls.Controller', {
     initialize: function(settings) {
         this.settings = new atom.Settings(settings);
 
+        this.size   = this.getSize();
+        this.width  = this.size.x + 200;
+        this.height = this.size.y + 20;
+
+        this.app = new App({
+            size: new Size(this.width, this.height)
+        });
+
+        var layer = this.app.createLayer({name: 'loading', intersection: 'manual', zIndex: 100});
+
+        var loading = new Loading(layer);
+
         this.colors = 'white silver gray black red maroon yellow olive lime green aqua teal blue navy fuchsia purple orange';
         this.backs  = 'sky colorful 1 2 3 4 5 a1 Green5 hd2';
 
-        atom.ImagePreloader.run({
+        var preloader = atom.ImagePreloader.run({
             back_1:        'backgrounds/1.jpg',
             back_2:        'backgrounds/2.jpg',
             back_3:        'backgrounds/3.jpg',
@@ -37,35 +49,32 @@ atom.declare('Balls.Controller', {
             ball_purple: 'balls.png [100:100]{0:15}',
             ball_orange: 'balls.png [100:100]{0:16}'
         }, this.start.bind(this));
+
+        preloader.events.add('progress', function () {
+            loading.setValue(this.progress);
+        });
     },
 
     start: function (images) {
-        var app, layerMain, layerScore, layerGame, back, stats, title, field, game, shift;
+        var layerMain, layerScore, layerGame, back, stats, title, field, game;
 
-        var size   = this.size();
-        var width  = size.x + 200;
-        var height = size.y + 20;
-
-        app = new App({
-            size: new Size(width, height),
-            resources: {
-                colors: this.colors.split(' '),
-                backs:  this.backs.split(' '),
-                images: images
-            }
+        this.app.settings.set('resources', {
+            colors: this.colors.split(' '),
+            backs:  this.backs.split(' '),
+            images: images
         });
 
-        layerMain = app.createLayer({intersection: 'manual', size: new Size(width, height), zIndex: 0, name: 'main'});
+        layerMain = this.app.createLayer({intersection: 'manual', size: new Size(this.width, this.height), zIndex: 0, name: 'main'});
 
         back = new Back(layerMain);
 
-        layerScore = app.createLayer({intersection: 'auto', size: new Size(170, 105), zIndex: 10, name: 'score'});
-        layerScore.dom.addShift(new Point(width + 20, 10));
+        layerScore = this.app.createLayer({intersection: 'auto', size: new Size(170, 105), zIndex: 10, name: 'score'});
+        layerScore.dom.addShift(new Point(this.width + 20, 10));
 
         stats = new Stats(layerScore);
 
-        layerGame = app.createLayer({intersection: 'all', size: new Size(size.x, size.y + 10), zIndex: 20, name: 'game'});
-        layerGame.dom.addShift(new Point((width - size.x) / 2, 0));
+        layerGame = this.app.createLayer({intersection: 'all', size: new Size(this.size.x, this.size.y + 10), zIndex: 20, name: 'game'});
+        layerGame.dom.addShift(new Point((this.width - this.size.x) / 2, 0));
 
         field = new Field(layerGame, {
             size:   this.settings.get('size'),
@@ -89,7 +98,7 @@ atom.declare('Balls.Controller', {
         });
     },
 
-    size: function() {
+    getSize: function() {
         var tile = this.settings.get('tile');
         var size = this.settings.get('size');
 
