@@ -37,33 +37,38 @@ atom.declare('Stats', App.Element, {
     },
 
     renderTo: function (ctx) {
-        ctx
-            .set({opacity: 0.5})
-            .fill(this.shape, 'black')
-            .set({opacity: 1})
-            .text({
-                to   :    this.score,
-                text :    'Score:',
-                color:    'white',
-                size:     22,
-                optimize: true,
-                shadow:   '1 1 3 black'
-            })
-            .text({
-                to   :    this.click,
-                text :    'Click:',
-                color:    'white',
-                size:     22,
-                optimize: true,
-                shadow:   '1 1 3 black'
-            })
-            .text({
-                to   :    this.level,
-                text :    'Level:',
-                color:    'white',
-                size:     22,
-                optimize: true,
-                shadow:   '1 1 3 black'
-            });
+        ctx.save();
+
+        ctx.set({opacity: 0.5});
+        ctx.fill(this.shape, 'black');
+
+        ctx.restore();
+
+        ctx.text({
+            to   :    this.score,
+            text :    'Score:',
+            color:    'white',
+            size:     22,
+            optimize: true,
+            shadow:   '1 1 3 black'
+        });
+
+        ctx.text({
+            to   :    this.click,
+            text :    'Click:',
+            color:    'white',
+            size:     22,
+            optimize: true,
+            shadow:   '1 1 3 black'
+        });
+
+        ctx.text({
+            to   :    this.level,
+            text :    'Level:',
+            color:    'white',
+            size:     22,
+            optimize: true,
+            shadow:   '1 1 3 black'
+        });
     }
 });

@@ -17,9 +17,7 @@ atom.declare('Title', App.Element, {
         this.opacity  = 0;
         this.fontSize = 0;
 
-        var fontSize = this.fontSize;
-        var opacity  = this.opacity;
-        var title    = this;
+        var title = this;
 
         this.animate({
             time: 300,
@@ -50,7 +48,10 @@ atom.declare('Title', App.Element, {
     },
 
     renderTo: function (ctx) {
-        ctx.set({opacity: this.opacity}).text({
+        ctx.save();
+
+        ctx.set({opacity: this.opacity});
+        ctx.text({
             to   :    this.shape,
             text :    this.text,
             color:    'white',
@@ -60,6 +61,8 @@ atom.declare('Title', App.Element, {
             weight:   'bold',
             padding:  this.padding,
             shadow:   '4 4 10 red'
-        }).set({opacity: 1});
+        });
+
+        ctx.restore();
     }
 });

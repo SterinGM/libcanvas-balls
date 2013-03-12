@@ -44,9 +44,6 @@ atom.declare('Balls.Score', App.Element, {
     fade: function () {
         this.show();
 
-        var fontSize = this.fontSize;
-        var opacity  = this.opacity;
-
         this.animate({
 			props: {
 				'shape.from.y': this.shape.from.y - 50
@@ -67,7 +64,10 @@ atom.declare('Balls.Score', App.Element, {
     },
 
     renderTo: function (ctx) {
-        ctx.set({opacity: this.opacity}).text({
+        ctx.save();
+
+        ctx.set({opacity: this.opacity});
+        ctx.text({
             to   :    this.shape,
             text :    this.text,
             color:    this.color,
@@ -77,6 +77,8 @@ atom.declare('Balls.Score', App.Element, {
             weight:   'bold',
             padding:  0,
             shadow: '1 1 3 black'
-        }).set({opacity: 1});
+        });
+
+        ctx.restore();
     }
 });

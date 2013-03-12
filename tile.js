@@ -4,6 +4,11 @@ atom.declare('Tile', App.Element, {
     },
 
     renderTo: function (ctx) {
-        ctx.set({opacity: this.opacity}).fill(this.shape, 'black');
+        ctx.save();
+
+        ctx.set({opacity: this.opacity});
+        ctx.fill(this.shape, 'black');
+
+        ctx.restore();
     }
 });

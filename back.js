@@ -43,8 +43,6 @@ atom.declare('Back', App.Element, {
 
         this.opacity = 0;
 
-        var opacity = this.opacity;
-
         this.animate({
             time: 1000,
             props: {

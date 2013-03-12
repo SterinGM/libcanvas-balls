@@ -143,8 +143,8 @@ atom.declare('Balls.Ball', App.Element, {
             props: {
                 'shape.from.x' : this.shape.from.x + scale,
                 'shape.from.y' : this.shape.from.y + scale,
-                'shape.to.x'   : this.shape.to.x - scale,
-                'shape.to.y'   : this.shape.to.y - scale
+                'shape.to.x'   : this.shape.to.x   - scale,
+                'shape.to.y'   : this.shape.to.y   - scale
             },
             onComplete: function () {
                 this.animated = false;

@@ -36,18 +36,20 @@ atom.declare('Balls.Info', App.Element, {
     },
 
     renderTo: function (ctx) {
-        ctx.set({opacity: 0.8})
-            .fill(this.shape, this.ball.color)
-            .stroke(this.shape)
-            .text({
-                to   :    this.shape,
-                text :    this.text,
-                color:    'black',
-                align:    'center',
-                optimize: true,
-                weight:   'bold',
-                padding:  0,
-                shadow:   '0 0 3 white'
-            }).set({opacity: 1});
+        ctx.save();
+
+        ctx.set({opacity: 0.8});
+        ctx.fill(this.shape, this.ball.color);
+        ctx.stroke(this.shape);
+        ctx.text({
+            to   :    this.shape,
+            text :    this.text,
+            align:    'center',
+            optimize: true,
+            weight:   'bold',
+            shadow:   '0 0 3 white'
+        });
+
+        ctx.restore();
     }
 });

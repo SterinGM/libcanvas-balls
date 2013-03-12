@@ -12,8 +12,6 @@ atom.declare('Increment', App.Element, {
     increment: function () {
         this.animatable.stop();
 
-        var current = this.current;
-
         this.animate({
             time: 1000,
             props: {
