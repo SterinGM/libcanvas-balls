@@ -176,6 +176,8 @@ atom.declare('Balls.Ball', App.Element, {
             onComplete: function () {
                 this.game.hideCount--;
 
+                this.destroy();
+
                 if (this.game.hideCount === 0) {
                     this.game.dropAllBalls();
                 }

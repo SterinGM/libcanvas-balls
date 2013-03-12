@@ -465,21 +465,12 @@ atom.declare('Game', App.Element, {
     },
 
     dropAllBalls: function() {
-        var size = this.settings.get('size');
-        var delta, first;
+        this.mouseHandler.unsubscribeAll();
 
-        this.balls.forEach(function(arr, x) {
-            delta = size.y;
-            first = null;
+        this.balls = [];
 
-            arr.forEach(function(ball, y) {
-                ball = this.updateball(ball, x, y, delta);
-
-                first = ball;
-            }.bind(this));
-
-            first.fall();
-        }.bind(this));
+        this.generate();
+        this.subscribe();
 
         this.gameStatus = 'newLevel';
     },
