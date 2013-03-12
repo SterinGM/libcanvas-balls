@@ -19,7 +19,7 @@ atom.declare('Game', App.Element, {
         this.mouseHandler = new App.MouseHandler({
             mouse:  new Mouse(this.layer.app.container.bounds),
             app:    this.layer.app,
-            search: new Balls.FastSearch(this.layer.settings.get('shift'))
+            search: new Balls.FastSearch(this.layer.dom.shift)
         });
 
         this.updateLevel();

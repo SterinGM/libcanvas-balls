@@ -40,7 +40,7 @@ atom.declare('Balls.Controller', {
     },
 
     start: function (images) {
-        var app, layerMain, layerScore, layerPopup, layerGame, back, stats, title, field, game, shift;
+        var app, layerMain, layerScore, layerGame, back, stats, title, field, game, shift;
 
         var size   = this.size();
         var width  = size.x + 200;
@@ -64,20 +64,18 @@ atom.declare('Balls.Controller', {
 
         stats = new Stats(layerScore);
 
-        layerPopup = app.createLayer({intersection: 'manual', size: new Size(size.x, height), zIndex: 30, name: 'popup'});
-        layerPopup.dom.addShift(new Point(10, 0));
-
-        title = new Title(layerPopup);
-
-        shift = new Point(10, 0);
-        layerGame = app.createLayer({intersection: 'all', size: new Size(size.x, size.y + 10), zIndex: 20, name: 'game', shift: shift});
-        layerGame.dom.addShift(shift);
+        layerGame = app.createLayer({intersection: 'all', size: new Size(size.x, size.y + 10), zIndex: 20, name: 'game'});
+        layerGame.dom.addShift(new Point(10, 0));
 
         field = new Field(layerGame, {
             size:   this.settings.get('size'),
             tile:   this.settings.get('tile'),
             from:   new Point(0, 10),
             zIndex: 0
+        });
+
+        title = new Title(layerGame, {
+            zIndex: 20
         });
 
         game = new Game(layerGame, {
