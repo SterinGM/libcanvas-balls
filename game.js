@@ -1,5 +1,9 @@
 atom.declare('Game', App.Element, {
     configure: function() {
+        this.animate = new atom.Animatable(this).animate;
+
+        this.startShift = this.layer.dom.shift.clone();
+
         this.bindMethods(['isValidPoint']);
 
         this.res = this.layer.app.settings.get('resources');
@@ -71,6 +75,10 @@ atom.declare('Game', App.Element, {
 
         if (this.level) {
             this.back.update();
+
+            this.shift(this.startShift.x);
+
+            this.title.show('Level complete!!!');
         }
 
         this.next += this.level * this.score;
@@ -78,6 +86,8 @@ atom.declare('Game', App.Element, {
         this.level++;
 
         this.start = true;
+
+        this.title.show('Level ' + this.level);
 
         this.stats.levelValue.current = this.level;
         this.stats.levelValue.redraw();
@@ -114,13 +124,33 @@ atom.declare('Game', App.Element, {
         }
     },
 
+    shift: function(x) {
+        this.animate({
+            fn: 'sine-out',
+            time: 300,
+            props: {
+                'layer.dom.shift.x': x
+            },
+            onTick: function() {
+                this.layer.dom.setShift(this.layer.dom.shift);
+
+                this.redraw();
+            }.bind(this),
+            onComplete: function() {
+                this.stats.shift();
+
+                this.mouseHandler.start();
+
+                this.redraw();
+            }.bind(this)
+        });
+    },
+
     completeFall: function() {
         if (this.start) {
-            this.title.show('Level ' + this.level);
-
             this.start = false;
 
-            this.mouseHandler.start();
+            this.shift(10);
         }
 
         this.calculation();

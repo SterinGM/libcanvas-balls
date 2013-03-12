@@ -60,12 +60,12 @@ atom.declare('Balls.Controller', {
         back = new Back(layerMain);
 
         layerScore = app.createLayer({intersection: 'auto', size: new Size(170, 105), zIndex: 10, name: 'score'});
-        layerScore.dom.addShift(new Point(size.x + 20, 10));
+        layerScore.dom.addShift(new Point(width + 20, 10));
 
         stats = new Stats(layerScore);
 
         layerGame = app.createLayer({intersection: 'all', size: new Size(size.x, size.y + 10), zIndex: 20, name: 'game'});
-        layerGame.dom.addShift(new Point(10, 0));
+        layerGame.dom.addShift(new Point((width - size.x) / 2, 0));
 
         field = new Field(layerGame, {
             size:   this.settings.get('size'),
