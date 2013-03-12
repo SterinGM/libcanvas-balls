@@ -20,8 +20,9 @@ atom.declare('Game', App.Element, {
         this.select = [];
         this.balls  = [];
 
-        this.start     = true;
-        this.fallBalls = 0;
+        this.gameStatus = 'newLevel';
+        this.fallBalls  = 0;
+        this.hideCount  = 0;
 
         this.mouseHandler = new App.MouseHandler({
             mouse:  new Mouse(this.layer.app.container.bounds),
@@ -71,37 +72,29 @@ atom.declare('Game', App.Element, {
     updateLevel: function() {
         this.mouseHandler.stop();
 
-        var count = this.level ? 1 : 3;
-
         if (this.level) {
             this.back.update();
 
-            this.shift(this.startShift.x);
-
-            this.title.show('Level complete!!!');
+            this.gameStatus = 'completeLevel';
+        } else {
+            for (var i = 1; i <= 3; i++) {
+                this.colors.push(this.res.colors.popRandom());
+            }
         }
 
         this.next += this.level * this.score;
 
         this.level++;
 
-        this.start = true;
-
-        this.title.show('Level ' + this.level);
-
         this.stats.levelValue.current = this.level;
         this.stats.levelValue.redraw();
-
-        for (var i = 1; i <= count; i++) {
-            this.colors.push(this.res.colors.popRandom());
-        }
     },
 
     generate: function() {
         var y, x, position, first, ball;
         var size = this.settings.get('size');
 
-        this.balls = atom.array.fillMatrix(size.x, size.y, null);
+        this.balls = atom.array.fillMatrix(size.y, size.x, null);
 
         for (x = 0; x < size.x; x++) {
             first = null;
@@ -115,7 +108,7 @@ atom.declare('Game', App.Element, {
                     first = ball;
                 }
 
-                this.balls[y][x] = ball;
+                this.balls[x][y] = ball;
             }
 
             if (first) {
@@ -139,18 +132,36 @@ atom.declare('Game', App.Element, {
             onComplete: function() {
                 this.stats.shift();
 
-                this.mouseHandler.start();
-
                 this.redraw();
+
+                if (this.gameStatus === 'start') {
+                    this.mouseHandler.start();
+                }
             }.bind(this)
         });
     },
 
     completeFall: function() {
-        if (this.start) {
-            this.start = false;
+        if (this.gameStatus === 'newLevel') {
+            this.title.show('Level ' + this.level);
+
+            this.gameStatus = 'start';
 
             this.shift(10);
+        } else if (this.gameStatus === 'completeLevel') {
+            this.shift(this.startShift.x);
+
+            this.colors.push(this.res.colors.popRandom());
+
+            this.hideCount = 0;
+
+            this.balls.forEach(function(arr) {
+                arr.forEach(function(ball) {
+                    ball.end();
+                }.bind(this));
+            }.bind(this));
+
+            this.title.show('Complete!!!');
         }
 
         this.calculation();
@@ -198,7 +209,7 @@ atom.declare('Game', App.Element, {
                     continue;
                 }
 
-                ball = this.balls[y][x];
+                ball = this.balls[x][y];
 
                 if (ball) {
                     this.count     = 0;
@@ -237,8 +248,8 @@ atom.declare('Game', App.Element, {
                 var neighbours = this.getNeighbours(ball.position);
 
                 neighbours.forEach(function(point) {
-                    if (this.balls[point.y][point.x]) {
-                        this.check(this.balls[point.y][point.x], color);
+                    if (this.balls[point.x][point.y]) {
+                        this.check(this.balls[point.x][point.y], color);
                     }
                 }.bind(this));
             }
@@ -405,7 +416,7 @@ atom.declare('Game', App.Element, {
             first = null;
 
             for (y = size.y - 1; y >= 0; y--) {
-                ball = this.balls[y][x];
+                ball = this.balls[x][y];
 
                 if (!ball) {
                     delta++;
@@ -421,8 +432,8 @@ atom.declare('Game', App.Element, {
                             first = ball;
                         }
 
-                        this.balls[y][x]   = null;
-                        this.balls[key][x] = ball;
+                        this.balls[x][y]   = null;
+                        this.balls[x][key] = ball;
 
                         key--;
                     }
@@ -431,22 +442,14 @@ atom.declare('Game', App.Element, {
 
             arr.forEach(function(ball) {
                 for (var j = size.y - 1; j >= 0; j--) {
-                    if (!this.balls[j][x]) {
-                        ball.shape.from = this.translatePoint(new Point(x, j - delta - 1));
-                        ball.shape.to   = this.translatePoint(new Point(x + 1, j - delta));
+                    if (!this.balls[x][j]) {
+                        ball = this.updateball(ball, x, j, delta);
 
-                        ball.hover    = false;
-                        ball.position = new Point(x, j);
-                        ball.from     = new Point(x, j - delta - 1);
-                        ball.color    = this.colors.clone().popRandom();
-
-                        this.balls[j][x] = ball;
+                        this.balls[x][j] = ball;
 
                         if (first === null) {
                             first = ball;
                         }
-
-                        this.balls[j][x] = ball;
 
                         break;
                     }
@@ -459,5 +462,37 @@ atom.declare('Game', App.Element, {
         }.bind(this));
 
         this.calculation();
+    },
+
+    dropAllBalls: function() {
+        var size = this.settings.get('size');
+        var delta, first;
+
+        this.balls.forEach(function(arr, x) {
+            delta = size.y;
+            first = null;
+
+            arr.forEach(function(ball, y) {
+                ball = this.updateball(ball, x, y, delta);
+
+                first = ball;
+            }.bind(this));
+
+            first.fall();
+        }.bind(this));
+
+        this.gameStatus = 'newLevel';
+    },
+
+    updateball: function(ball, x, y, delta) {
+        ball.shape.from = this.translatePoint(new Point(x, y - delta - 1));
+        ball.shape.to   = this.translatePoint(new Point(x + 1, y - delta));
+
+        ball.hover    = false;
+        ball.position = new Point(x, y);
+        ball.from     = new Point(x, y - delta - 1);
+        ball.color    = this.colors.clone().popRandom();
+
+        return ball;
     }
 });

@@ -22,7 +22,7 @@ atom.declare('Balls.Ball', App.Element, {
         var y, ball;
 
         for (y = this.position.y - 1; y >= 0; y--) {
-            ball = this.game.balls[y][this.position.x];
+            ball = this.game.balls[this.position.x][y];
 
             if (ball) {
                 if (!ball.animated && !this.from.equals(this.position, 1)) {
@@ -149,12 +149,35 @@ atom.declare('Balls.Ball', App.Element, {
             onComplete: function () {
                 this.animated = false;
 
-                this.game.balls[this.position.y][this.position.x] = null;
+                this.game.balls[this.position.x][this.position.y] = null;
 
-                var ball = this;
+                if (this === last) {
+                    this.game.dropBalls(this);
+                }
+            }.bind(this)
+        });
+    },
 
-                if (ball === last) {
-                    this.game.dropBalls(ball);
+    end: function() {
+        this.game.hideCount++;
+
+        var scale = Math.ceil(this.shape.width / 2);
+
+        this.animate({
+            time: 500,
+            fn : 'sine-out',
+            onTick: this.redraw,
+            props: {
+                'shape.from.x' : this.shape.from.x + scale,
+                'shape.from.y' : this.shape.from.y + scale,
+                'shape.to.x'   : this.shape.to.x   - scale,
+                'shape.to.y'   : this.shape.to.y   - scale
+            },
+            onComplete: function () {
+                this.game.hideCount--;
+
+                if (this.game.hideCount === 0) {
+                    this.game.dropAllBalls();
                 }
             }.bind(this)
         });
